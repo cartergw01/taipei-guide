@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carter's Taipei Guide</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --color-eats: #FF6B6B;
+      --color-cafes: #FFB347;
+      --color-bars: #9B59B6;
+      --color-markets: #E91E8C;
+      --color-attractions: #3498DB;
+      --color-areas: #1ABC9C;
+      --bg: #FFFAF5;
+      --text: #1a1a2e;
+      --text-muted: #666;
+      --card-bg: #ffffff;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+      --shadow-hover: 0 12px 40px rgba(0,0,0,0.15);
+      --radius: 16px;
+      --tab-h: 68px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=2400&q=85');
+      background-size: cover;
+      background-position: center 30%;
+      filter: brightness(0.85);
+      transform: scale(1.05);
+      animation: heroZoom 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes heroZoom {
+      from { transform: scale(1.05); }
+      to   { transform: scale(1.12); }
+    }
+
+    #hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.15) 0%,
+        rgba(0,0,0,0.45) 50%,
+        rgba(0,0,0,0.65) 100%
+      );
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 24px;
+      animation: heroFadeIn 1.2s ease-out both;
+    }
+
+    @keyframes heroFadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-eyebrow {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(13px, 2vw, 16px);
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(36px, 6vw, 78px);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+    }
+
+    .hero-title .flag {
+      display: inline-block;
+      animation: wave 2s ease-in-out infinite;
+    }
+
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      25%       { transform: rotate(20deg); }
+      75%       { transform: rotate(-10deg); }
+    }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-size: clamp(16px, 2.5vw, 22px);
+      color: rgba(255,255,255,0.85);
+      font-weight: 400;
+      margin-bottom: 48px;
+    }
+
+    .hero-cta {
+      display: inline-block;
+      background: #fff;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      padding: 16px 36px;
+      border-radius: 50px;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+    }
+
+    .scroll-arrow {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      color: rgba(255,255,255,0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-family: 'Poppins', sans-serif;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2.5s ease-in-out infinite;
+      cursor: pointer;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); opacity: 0.7; }
+      50%       { transform: translateX(-50%) translateY(8px); opacity: 1; }
+    }
+
+    .scroll-arrow svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* ── GUIDE SECTION ── */
+    #guide {
+      position: relative;
+    }
+
+    /* ── TABS ── */
+    #tabs-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,250,245,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.07);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+
+    #tabs {
+      display: flex;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+      gap: 4px;
+      height: var(--tab-h);
+      align-items: center;
+    }
+
+    #tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      border: 2px solid transparent;
+      background: transparent;
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.22s;
+      white-space: nowrap;
+    }
+
+    .tab:hover {
+      background: rgba(0,0,0,0.04);
+      color: var(--text);
+    }
+
+    .tab.active {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .tab[data-cat="eats"].active       { background: var(--color-eats); }
+    .tab[data-cat="cafes"].active      { background: var(--color-cafes); }
+    .tab[data-cat="bars"].active       { background: var(--color-bars); }
+    .tab[data-cat="markets"].active    { background: var(--color-markets); }
+    .tab[data-cat="attractions"].active { background: var(--color-attractions); }
+    .tab[data-cat="areas"].active      { background: var(--color-areas); }
+
+    /* ── CARDS ── */
+    #cards-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+      animation: fadeSlideIn 0.4s ease-out both;
+    }
+
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 900;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+    }
+
+    #cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      #cards-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 560px) {
+      #cards-grid { grid-template-columns: 1fr; gap: 16px; }
+      #cards-section { padding: 32px 16px 60px; }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: default;
+      animation: fadeSlideIn 0.4s ease-out both;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-top {
+      height: 6px;
+    }
+
+    .card-body {
+      padding: 20px 22px 22px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-emoji {
+      font-size: 28px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .card-pill {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 50px;
+      margin-top: 5px;
+      opacity: 0.85;
+      color: #fff;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      color: var(--text-muted);
+      font-size: 14px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+
+    footer span { opacity: 0.6; }
+  </style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div id="hero-bg"></div>
+  <div id="hero-overlay"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">✈️ Your personal city guide</p>
+    <h1 class="hero-title">
+      Carter welcomes you<br>to Taipei! <span class="flag">🇹🇼</span>
+    </h1>
+    <p class="hero-sub">Every spot you need — curated with love.</p>
+    <button class="hero-cta" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
+      Explore the guide →
+    </button>
+  </div>
+
+  <div class="scroll-arrow" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"/>
+    </svg>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- ── GUIDE ── -->
+<section id="guide">
+  <div id="tabs-wrap">
+    <div id="tabs">
+      <button class="tab active" data-cat="eats">🍜 Eats</button>
+      <button class="tab" data-cat="cafes">☕ Cafes</button>
+      <button class="tab" data-cat="bars">🍸 Bars</button>
+      <button class="tab" data-cat="markets">🌃 Night Markets</button>
+      <button class="tab" data-cat="attractions">🗺️ Attractions</button>
+      <button class="tab" data-cat="areas">🏙️ Areas</button>
+    </div>
+  </div>
+
+  <div id="cards-section">
+    <div class="section-header">
+      <h2 class="section-title" id="section-title"></h2>
+      <p class="section-desc" id="section-desc"></p>
+    </div>
+    <div id="cards-grid"></div>
+  </div>
+</section>
+
+<footer>
+  <span>Made with ❤️ by Carter &nbsp;·&nbsp; Taipei, Taiwan 🇹🇼</span>
+</footer>
+
+<script>
+  const CATEGORIES = {
+    eats: {
+      label: '🍜 Eats',
+      color: '#FF6B6B',
+      desc: 'The best food in Taipei — from iconic institutions to hidden local gems.',
+    },
+    cafes: {
+      label: '☕ Cafes',
+      color: '#FFB347',
+      desc: 'Taipei has one of the world\'s best cafe cultures. These are the spots.',
+    },
+    bars: {
+      label: '🍸 Bars & Nightlife',
+      color: '#9B59B6',
+      desc: 'Where to drink, dance, and soak up Taipei nights.',
+    },
+    markets: {
+      label: '🌃 Night Markets',
+      color: '#E91E8C',
+      desc: 'Go hungry. These are Taipei\'s legendary street food markets.',
+    },
+    attractions: {
+      label: '🗺️ Attractions',
+      color: '#3498DB',
+      desc: 'Temples, skylines, and parks — the iconic sights of Taipei.',
+    },
+    areas: {
+      label: '🏙️ Areas',
+      color: '#1ABC9C',
+      desc: 'Each neighborhood has its own vibe. Here\'s where to spend your time.',
+    },
+  };
+
+  const PLACES = [
+    // EATS
+    { cat: 'eats', emoji: '🥟', name: 'Din Tai Fung', hood: 'Da\'an', desc: 'World-famous xiao long bao (soup dumplings). The original location on Xinyi Road is a Taipei rite of passage. Get there early.' },
+    { cat: 'eats', emoji: '🍜', name: 'Yong Kang Beef Noodle', hood: 'Da\'an', desc: 'Legendary slow-braised beef noodle soup in the heart of the Yongkang food street. Rich broth, tender meat.' },
+    { cat: 'eats', emoji: '🦞', name: 'Addiction Aquatic Development', hood: 'Zhongshan', desc: 'Upscale fresh seafood market, restaurant, and sushi bar all in one. Get the sashimi and don\'t leave without the sea urchin.' },
+    { cat: 'eats', emoji: '🥛', name: 'Fu Hang Dou Jiang', hood: 'Zhongzheng', desc: 'The most iconic Taiwanese breakfast experience: freshly made soy milk and crispy scallion pancakes. There\'s always a line — worth it.' },
+    { cat: 'eats', emoji: '🍢', name: 'Ay-Chung Flour-Rice Noodle', hood: 'Ximending', desc: 'Super famous oyster vermicelli spot, line out the door every single night. Order a bowl and eat standing on the street.' },
+    { cat: 'eats', emoji: '🍽️', name: 'RAW', hood: 'Zhongshan', desc: 'André Chiang\'s Michelin-starred restaurant serving extraordinary modern Taiwanese cuisine. Make a reservation well in advance.' },
+
+    // CAFES
+    { cat: 'cafes', emoji: '☕', name: 'Simple Kaffa Xinyi', hood: 'Xinyi', desc: 'World-class specialty coffee by World Barista Champion Berg Wu. Clean, modern space and genuinely exceptional espresso.' },
+    { cat: 'cafes', emoji: '🫶', name: 'Rufous Coffee', hood: 'Da\'an', desc: 'Cozy neighborhood specialty cafe beloved by locals. Excellent pour-overs in a warm, unassuming space on a quiet street.' },
+    { cat: 'cafes', emoji: '🏛️', name: 'Fong Da Coffee', hood: 'Ximending', desc: 'Taipei\'s oldest cafe, open since 1956. Classic vintage atmosphere, old-school espresso drinks. A piece of Taipei history.' },
+    { cat: 'cafes', emoji: '🛍️', name: 'URBAN Research', hood: 'Zhongshan', desc: 'Trendy concept store cafe in the Zhongshan boutique district. Great for people-watching, coffee, and browsing cool products.' },
+    { cat: 'cafes', emoji: '📷', name: 'Cafe Showroom', hood: 'Zhongshan', desc: 'Gorgeous minimal interior and standout latte art. One of those cafes you\'ll want to photograph before you drink it.' },
+
+    // BARS
+    { cat: 'bars', emoji: '🏙️', name: 'Brass Monkey', hood: 'Xinyi', desc: 'Iconic rooftop bar with direct views of Taipei 101. Go at sunset for the golden hour, stay for the party. Always packed on weekends.' },
+    { cat: 'bars', emoji: '🕵️', name: 'Ounce Taipei', hood: 'Da\'an', desc: 'A hidden speakeasy with craft cocktails that are seriously impressive. Low-key, intimate vibe — no gimmicks, just great drinks.' },
+    { cat: 'bars', emoji: '💃', name: 'Barcode', hood: 'Xinyi', desc: 'Popular nightclub inside ATT 4 Fun near Taipei 101. High energy, packed on Friday and Saturday nights, mostly young locals.' },
+    { cat: 'bars', emoji: '🎧', name: 'Marquee', hood: 'Xinyi', desc: 'One of Taipei\'s biggest clubs, often hosting international DJs. The Xinyi nightlife strip at its most electric.' },
+    { cat: 'bars', emoji: '🍹', name: 'The Butcher\'s Son', hood: 'Zhongshan', desc: 'Hip, low-lit cocktail bar in a converted space in Zhongshan. The kind of bar you discover and then come back to every night.' },
+
+    // NIGHT MARKETS
+    { cat: 'markets', emoji: '🎪', name: 'Shilin Night Market', hood: 'Shilin', desc: 'The biggest and most famous night market in Taipei. Go for the underground food court, fried chicken cutlets, and scallion pancakes. Yes it\'s touristy — still essential.' },
+    { cat: 'markets', emoji: '🌶️', name: 'Raohe Night Market', hood: 'Songshan', desc: 'Compact, atmospheric street lined with food stalls. The pepper pork buns (胡椒餅) at the temple entrance are legendary. Gets very hot and crowded — embrace it.' },
+    { cat: 'markets', emoji: '🔥', name: 'Ningxia Night Market', hood: 'Datong', desc: 'Carter\'s pick for the most local experience — minimal tourists, incredible food. Try the taro balls, oyster omelette, and pork rice. Locals only energy.' },
+
+    // ATTRACTIONS
+    { cat: 'attractions', emoji: '🏛️', name: 'Chiang Kai-shek Memorial', hood: 'Zhongzheng', desc: 'One of Taipei\'s most iconic landmarks. The changing of the guard ceremony every hour is mesmerizing. The plaza at sunset is stunning.' },
+    { cat: 'attractions', emoji: '🏢', name: 'Taipei 101', hood: 'Xinyi', desc: 'Go up to the observation deck (89F) for a 360° panoramic view of the city. Best at sunset or at night when the city glows.' },
+    { cat: 'attractions', emoji: '⛰️', name: 'Elephant Mountain', hood: 'Nangang', desc: 'A 20-minute hike up steps rewards you with the most iconic Taipei skyline view — Taipei 101 framed perfectly. Go at dusk.' },
+    { cat: 'attractions', emoji: '🌳', name: 'Da\'an Forest Park', hood: 'Da\'an', desc: 'Taipei\'s Central Park. Wide paths, a small lake, and tons of locals jogging or relaxing. Great for an early morning walk.' },
+    { cat: 'attractions', emoji: '🪔', name: 'Longshan Temple', hood: 'Wanhua', desc: 'Taipei\'s oldest and most atmospheric temple. Clouds of incense, devoted worshippers, and stunning traditional architecture.' },
+    { cat: 'attractions', emoji: '🏺', name: 'National Palace Museum', hood: 'Shilin', desc: 'Holds one of the world\'s largest collections of Chinese imperial art and artifacts. The jade cabbage alone is worth the trip.' },
+
+    // AREAS
+    { cat: 'areas', emoji: '🛹', name: 'Ximending', hood: 'Wanhua', desc: 'Taipei\'s Times Square meets youth culture hub. Street fashion, underground music, tattoo parlors, food stalls, and neon lights. Touristy but genuinely cool.' },
+    { cat: 'areas', emoji: '🌃', name: 'Xinyi District', hood: 'Xinyi', desc: 'Modern, sleek Taipei right near Taipei 101. High-end malls, rooftop bars, and the best concentration of clubs and nightlife. Weekend nights go off here.' },
+    { cat: 'areas', emoji: '🌿', name: 'Zhongshan', hood: 'Zhongshan', desc: 'Tree-lined streets with indie cafes, boutique fashion, art galleries, and local designers. One of the most walkable and enjoyable parts of Taipei.' },
+    { cat: 'areas', emoji: '🛍️', name: 'Dongqu (East District)', hood: 'Da\'an', desc: 'Upscale shopping, packed with trendy restaurants and boutiques. Where Taipei\'s fashion crowd lives. Great for an afternoon of eating and exploring.' },
+    { cat: 'areas', emoji: '🏡', name: 'Da\'an', hood: 'Da\'an', desc: 'Residential neighborhood with a chill, village-like vibe. Incredible cafe culture — perfect for slow mornings. Home to Yongkang Street\'s food paradise.' },
+    { cat: 'areas', emoji: '♨️', name: 'Beitou', hood: 'Beitou', desc: 'Head north to Taipei\'s thermal hot spring district. A totally different vibe — lush hills, natural hot spring baths, and old Japanese-era architecture. Perfect day trip.' },
+  ];
+
+  let activeCategory = 'eats';
+
+  function render(cat) {
+    activeCategory = cat;
+    const catData = CATEGORIES[cat];
+
+    // Update header
+    document.getElementById('section-title').textContent = catData.label;
+    document.getElementById('section-desc').textContent = catData.desc;
+
+    // Update tabs
+    document.querySelectorAll('.tab').forEach(t => {
+      t.classList.toggle('active', t.dataset.cat === cat);
+    });
+
+    // Filter + render cards
+    const places = PLACES.filter(p => p.cat === cat);
+    const grid = document.getElementById('cards-grid');
+    grid.innerHTML = '';
+
+    places.forEach((place, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.animationDelay = `${i * 60}ms`;
+      card.innerHTML = `
+        <div class="card-top" style="background:${catData.color}"></div>
+        <div class="card-body">
+          <div class="card-header">
+            <span class="card-emoji">${place.emoji}</span>
+            <div>
+              <div class="card-name">${place.name}</div>
+              <span class="card-pill" style="background:${catData.color}">${place.hood}</span>
+            </div>
+          </div>
+          <p class="card-desc">${place.desc}</p>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  // Tab click listeners
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      render(tab.dataset.cat);
+      document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  // Initial render
+  render('eats');
+</script>
+
+</body>
+</html>
