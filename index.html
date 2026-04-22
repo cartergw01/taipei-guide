@@ -441,6 +441,57 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
+    /* ── FILTERS ── */
+    #filters-bar {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 24px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
+      font-family: 'Poppins', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: 1.5px solid rgba(0,0,0,0.14);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(0,0,0,0.3);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      color: #fff;
+    }
+
+    .filter-group-header {
+      grid-column: 1 / -1;
+      font-family: 'Poppins', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 8px 0 4px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      margin-top: 8px;
+    }
+
+    .filter-group-header:first-child { margin-top: 0; }
+
     /* ── FOOTER ── */
     footer {
       text-align: center;
@@ -496,6 +547,13 @@
       <button class="tab" data-cat="attractions">🗺️ Attractions</button>
       <button class="tab" data-cat="areas">🏙️ Areas</button>
     </div>
+  </div>
+
+  <div id="filters-bar">
+    <button class="filter-btn" data-tag="carter">Carter's List</button>
+    <button class="filter-btn" data-tag="group">Your Spreadsheet</button>
+    <button class="filter-btn" data-tag="touristy">Tourist Spots</button>
+    <button class="filter-btn" data-tag="famous">Popular Places</button>
   </div>
 
   <div id="cards-section">
@@ -833,6 +891,7 @@
   }
 
   let activeCategory = 'eats';
+  let activeFilter   = null;
 
   function renderTags(tags) {
     if (!tags || tags.length === 0) return '';
@@ -842,48 +901,81 @@
     }).join('') + '</div>';
   }
 
+  function buildCard(place, delay) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.animationDelay = `${delay}ms`;
+    card.innerHTML = `
+      <div class="card-img" style="${getImgStyle(place)}"></div>
+      <div class="card-body">
+        <div class="card-header">
+          <span class="card-emoji">${place.emoji}</span>
+          <div style="flex:1;min-width:0">
+            <div class="card-name-row">
+              <div class="name-mrt">
+                <a class="card-name" href="${getMapsUrl(place)}" target="_blank" rel="noopener noreferrer">${place.name}</a>
+                ${getMrtBadge(place.hood)}
+              </div>
+              ${place.rating != null ? `<span class="card-rating">⭐ ${place.rating.toFixed(1)}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        ${renderTags(place.tags)}
+        <p class="card-desc">${place.desc}</p>
+      </div>
+    `;
+    return card;
+  }
+
+  function setFilterBtns(tag) {
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      const on = b.dataset.tag === tag;
+      b.classList.toggle('active', on);
+      b.style.background   = on ? TAGS[b.dataset.tag].color : '';
+      b.style.borderColor  = on ? TAGS[b.dataset.tag].color : '';
+    });
+  }
+
   function render(cat) {
     activeCategory = cat;
+    activeFilter   = null;
+    setFilterBtns(null);
+
     const catData = CATEGORIES[cat];
-
     document.getElementById('section-title').textContent = catData.label;
-    document.getElementById('section-desc').textContent = catData.desc;
+    document.getElementById('section-desc').textContent  = catData.desc;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
 
-    document.querySelectorAll('.tab').forEach(t => {
-      t.classList.toggle('active', t.dataset.cat === cat);
-    });
+    const places = PLACES.filter(p => p.cat === cat).sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    const grid = document.getElementById('cards-grid');
+    grid.innerHTML = '';
+    places.forEach((p, i) => grid.appendChild(buildCard(p, i * 60)));
+  }
 
-    const places = PLACES
-      .filter(p => p.cat === cat)
-      .sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  function renderFilter(tag) {
+    activeFilter = tag;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    setFilterBtns(tag);
+
+    const tagDef = TAGS[tag];
+    document.getElementById('section-title').textContent = tagDef.label;
+    document.getElementById('section-desc').textContent  = `Every spot tagged "${tagDef.label}" across all categories.`;
+
+    const matching = PLACES.filter(p => p.tags.includes(tag));
+    const groups = {};
+    matching.forEach(p => { if (!groups[p.cat]) groups[p.cat] = []; groups[p.cat].push(p); });
+    Object.values(groups).forEach(g => g.sort((a, b) => (b.rating || 0) - (a.rating || 0)));
 
     const grid = document.getElementById('cards-grid');
     grid.innerHTML = '';
-
-    places.forEach((place, i) => {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.style.animationDelay = `${i * 60}ms`;
-      card.innerHTML = `
-        <div class="card-img" style="${getImgStyle(place)}"></div>
-        <div class="card-body">
-          <div class="card-header">
-            <span class="card-emoji">${place.emoji}</span>
-            <div style="flex:1;min-width:0">
-              <div class="card-name-row">
-                <div class="name-mrt">
-                  <a class="card-name" href="${getMapsUrl(place)}" target="_blank" rel="noopener noreferrer">${place.name}</a>
-                  ${getMrtBadge(place.hood)}
-                </div>
-                ${place.rating != null ? `<span class="card-rating">⭐ ${place.rating.toFixed(1)}</span>` : ''}
-              </div>
-            </div>
-          </div>
-          ${renderTags(place.tags)}
-          <p class="card-desc">${place.desc}</p>
-        </div>
-      `;
-      grid.appendChild(card);
+    let idx = 0;
+    const catOrder = ['eats','cafes','boba','bars','clubs','markets','attractions','areas'];
+    catOrder.filter(c => groups[c]).forEach(cat => {
+      const hdr = document.createElement('div');
+      hdr.className = 'filter-group-header';
+      hdr.textContent = CATEGORIES[cat].label;
+      grid.appendChild(hdr);
+      groups[cat].forEach(p => grid.appendChild(buildCard(p, idx++ * 40)));
     });
   }
 
@@ -891,6 +983,18 @@
     tab.addEventListener('click', () => {
       render(tab.dataset.cat);
       document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tag = btn.dataset.tag;
+      if (activeFilter === tag) {
+        render(activeCategory);
+      } else {
+        renderFilter(tag);
+        document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     });
   });
 
