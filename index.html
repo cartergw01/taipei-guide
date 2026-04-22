@@ -321,10 +321,11 @@
       line-height: 1;
       font-size: 10px;
       font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 50px;
-      color: #fff;
-      letter-spacing: 0.04em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1.5px solid;
+      background: transparent;
+      letter-spacing: 0.03em;
       text-transform: uppercase;
     }
 
@@ -468,7 +469,7 @@
     <div class="hero-stats">
       <div class="hero-stat"><span class="stat-num" id="stat-famous"></span><span class="stat-label">Iconic</span></div>
       <div class="hero-stat"><span class="stat-num" id="stat-must"></span><span class="stat-label">Must Try</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-carter"></span><span class="stat-label">Carter's ♥</span></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-carter"></span><span class="stat-label">Carter's List</span></div>
       <div class="hero-stat"><span class="stat-num" id="stat-group"></span><span class="stat-label">Your Spreadsheet</span></div>
     </div>
     <button class="hero-cta" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
@@ -527,7 +528,7 @@
   const TAGS = {
     must:     { label: 'Must Try',     color: '#E8453C' },
     famous:   { label: 'Iconic',       color: '#2980B9' },
-    carter:   { label: "Carter's ♥",  color: '#16A085' },
+    carter:   { label: "Carter's List", color: '#16A085' },
     friend:   { label: 'Friend Rec',   color: '#8E44AD' },
     hidden:   { label: 'Hidden Gem',   color: '#D68910' },
     touristy: { label: 'Tourist Spot',  color: '#808B96' },
@@ -637,9 +638,14 @@
     { cat: 'bars', rating: 4.4, emoji: '🍹', name: "The Butcher's Son", hood: 'Zhongshan', tags: ['hidden'], desc: 'Hip, low-lit cocktail bar in a converted space. The kind of bar you discover and then come back to every night.' },
     { cat: 'bars', rating: 4.4, emoji: '🌱', name: 'Bar Root by -1', hood: 'Zhongshan', tags: ['carter'], desc: 'A cozy bar filled with plants and a beer pong table. Super chill, social vibe — great for a relaxed first drink.' },
     { cat: 'bars', rating: 4.4, emoji: '✨', name: 'Wonder Bar', hood: 'Songshan', tags: ['group'], desc: 'A lively bar on Fuxing N Rd with a great playlist and solid drinks. Popular with a local crowd — good energy without being a full-on club.' },
+    { cat: 'bars', rating: 4.7, emoji: '🥃', name: 'Fake Sober', hood: "Da'an", tags: ['carter','hidden'], desc: 'A standout craft cocktail bar with a name that earns its irony. Creative, well-executed drinks in a cool, unpretentious space.' },
+    { cat: 'bars', rating: 4.8, emoji: '🌙', name: 'Sleep No More', hood: 'Zhongshan', tags: ['must','carter','hidden'], desc: 'One of the most atmospheric bars in Taipei. Dark, intimate, and theatrical — the cocktails match the mood perfectly. A serious bar experience.' },
 
     // CLUBS
-    { cat: 'clubs', rating: 4.3, emoji: '🎧', name: 'Marquee', hood: 'Xinyi', tags: ['famous','carter'], desc: "One of Taipei's biggest clubs, often hosting international DJs. The Xinyi nightlife strip at its most electric." },
+    { cat: 'clubs', rating: 4.5, emoji: '🎧', name: 'DD', hood: 'Xinyi', tags: ['carter'], desc: 'One of the hottest clubs in Taipei right now. Great sound system, strong line-ups, and a crowd that actually knows how to move.' },
+    { cat: 'clubs', rating: 4.4, emoji: '🤖', name: 'AI', hood: 'Xinyi', tags: ['carter'], desc: 'A sleek, high-energy club in Xinyi with a futuristic vibe. Packed on weekends with a young, energetic crowd and big-name DJ sets.' },
+    { cat: 'clubs', rating: 4.3, emoji: '🌊', name: 'Wave', hood: 'Xinyi', tags: ['carter'], desc: 'A newer club with a strong following. The music programming is consistently good and the layout makes for a great night.' },
+    { cat: 'clubs', rating: 4.2, emoji: '🇰🇷', name: 'Kor', hood: 'Xinyi', tags: ['carter'], desc: 'Korean-influenced club with a distinct vibe from the usual Xinyi spots. Good music, lively crowd, worth adding to the rotation.' },
     { cat: 'clubs', rating: 4.3, emoji: '💃', name: 'Barcode', hood: 'Xinyi', tags: ['carter'], desc: 'Popular nightclub inside ATT 4 Fun near Taipei 101. High energy, packed on Friday and Saturday nights, mostly young locals.' },
     { cat: 'clubs', rating: 3.7, emoji: '🔥', name: 'RUFF Night Club', hood: 'Xinyi', tags: ['carter'], desc: 'A gritty, underground nightclub energy in the Xinyi nightlife strip. Lower barrier than the big clubs — good for a wild, unfiltered night out.' },
 
@@ -719,7 +725,7 @@
     if (!tags || tags.length === 0) return '';
     return '<div class="card-tags">' + tags.map(t => {
       const def = TAGS[t];
-      return def ? `<span class="tag" style="background:${def.color}">${def.label}</span>` : '';
+      return def ? `<span class="tag" style="color:${def.color};border-color:${def.color}">${def.label}</span>` : '';
     }).join('') + '</div>';
   }
 
