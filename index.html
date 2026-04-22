@@ -377,8 +377,22 @@
     }
 
     @media (max-width: 560px) {
-      #cards-grid { grid-template-columns: 1fr; gap: 12px; }
-      #cards-section { padding: 28px 16px 52px; }
+      #cards-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      #cards-section { padding: 20px 12px 48px; }
+      #filters-bar { padding: 12px 12px 0; gap: 6px; }
+      .filter-btn { font-size: 11px; padding: 5px 11px; }
+      .card-img { height: 120px; }
+      .card-body { padding: 10px 12px 12px; }
+      .card-emoji { font-size: 18px; }
+      .card-name { font-size: 13px; }
+      .mrt-badge { font-size: 9px; padding: 2px 5px; }
+      .card-desc { font-size: 12px; line-height: 1.5; }
+      .card-rating { font-size: 10px; }
+      .tag { font-size: 9px; padding: 1px 5px; }
+    }
+
+    @media (max-width: 360px) {
+      #cards-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
     }
 
     .card {
