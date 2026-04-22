@@ -465,7 +465,8 @@
     carter:   { label: "Carter's ♥",  color: '#16A085' },
     friend:   { label: 'Friend Rec',   color: '#8E44AD' },
     hidden:   { label: 'Hidden Gem',   color: '#D68910' },
-    touristy: { label: 'Tourist Spot', color: '#808B96' },
+    touristy: { label: 'Tourist Spot',  color: '#808B96' },
+    group:    { label: "Friends' List", color: '#E67E22' },
   };
 
   const PLACES = [
@@ -478,7 +479,7 @@
     { cat: 'eats', rating: 4.8, emoji: '🍜', name: '小大麵線', hood: 'Da\'an', tags: ['hidden','carter'], desc: 'A beloved oyster noodle shop run by an illustrator — the art on the walls is as good as the food. A unique local gem.' },
     { cat: 'eats', rating: 4.8, emoji: '🍻', name: '狗一下居食酒堂', hood: 'Da\'an', tags: ['carter'], desc: 'A buzzing izakaya with great food and cold beer. Lively, loud, and exactly what you want after a long day of exploring.' },
     { cat: 'eats', rating: 4.8, emoji: '🍱', name: '創鮨 丼飯壽司', hood: 'Zhongshan', tags: ['carter'], desc: 'Creative Japanese donburi and sushi in an intimate space. The omakase bowls are outstanding value.' },
-    { cat: 'eats', rating: 4.7, emoji: '🥟', name: 'Din Tai Fung', hood: 'Da\'an', tags: ['must','famous','touristy'], desc: 'World-famous xiao long bao (soup dumplings). The original Xinyi Road location is a Taipei rite of passage. Get there early.' },
+    { cat: 'eats', rating: 4.7, emoji: '🥟', name: 'Din Tai Fung', hood: 'Da\'an', tags: ['must','famous','touristy','group'], desc: 'World-famous xiao long bao (soup dumplings). The original Xinyi Road location is a Taipei rite of passage. Get there early.' },
     { cat: 'eats', rating: 4.7, emoji: '🍗', name: 'HOOTERS 信義', hood: 'Xinyi', tags: ['carter'], desc: 'Carter\'s guilty pleasure. Wings, cold beer, and a lively crowd in the heart of Xinyi. Good pre-game spot before hitting the clubs.' },
     { cat: 'eats', rating: 4.7, emoji: '🥩', name: '燒酒烤烤豬', hood: 'Da\'an', tags: ['carter'], desc: 'Korean BBQ done really well — great quality pork belly and ribs with solid soju selections. Get a big group together.' },
     { cat: 'eats', rating: 4.7, emoji: '🥩', name: '艾朋牛排餐酒館', hood: 'Da\'an', tags: [], desc: 'A sophisticated steak and wine bistro. Excellent cuts, thoughtful wine pairings, and a candlelit ambiance. Good date spot.' },
@@ -503,7 +504,7 @@
     { cat: 'eats', rating: 4.4, emoji: '🍱', name: '加分100% 涮涮鍋', hood: 'Da\'an', tags: [], desc: 'Japanese shabu shabu with premium broth options and fresh ingredients. Great for a leisurely dinner with a group.' },
     { cat: 'eats', rating: 4.4, emoji: '🍣', name: '真真庵 Omakase', hood: 'Da\'an', tags: [], desc: 'Counter omakase sushi in an intimate setting. Chef\'s selection of seasonal nigiri — a proper sushi experience.' },
     { cat: 'eats', rating: 4.4, emoji: '🍜', name: '你回來啦拉麵', hood: 'Da\'an', tags: ['carter'], desc: '"You\'re back!" — the name says it all. A ramen shop so good you\'ll return the same trip. Rich tonkotsu broth, housemade noodles.' },
-    { cat: 'eats', rating: 4.3, emoji: '🍗', name: '週末炸雞俱樂部', hood: 'Xinyi', tags: ['carter'], desc: 'Weekend Chicken Club — fun, casual fried chicken joint and bar in Xinyi. Great vibes, cold beers, good pre-night-out energy.' },
+    { cat: 'eats', rating: 4.3, emoji: '🍗', name: '週末炸雞俱樂部', hood: 'Xinyi', tags: ['carter','group'], desc: 'Weekend Chicken Club — fun, casual fried chicken joint and bar in Xinyi. Great vibes, cold beers, good pre-night-out energy.' },
     { cat: 'eats', rating: 4.2, emoji: '🍗', name: 'Torisoba Take', hood: 'Zhongshan', tags: [], desc: 'Chicken ramen done Japanese-style. Clean broth, tender chicken, excellent noodles. A solid bowl when you need ramen.' },
     { cat: 'eats', rating: 4.2, emoji: '🍮', name: '豆花莊', hood: 'Da\'an', tags: [], desc: 'Classic Taiwanese tofu pudding (douhua). Silky smooth tofu with peanuts, tapioca, and sweet ginger syrup. A local staple.' },
     { cat: 'eats', rating: 4.2, emoji: '🍝', name: 'BEPPIN PASTA', hood: 'Zhongshan', tags: [], desc: 'Japanese-influenced Italian pasta that delivers. Housemade noodles, clean flavors, and a cozy corner spot.' },
@@ -517,6 +518,10 @@
     { cat: 'eats', rating: 4.0, emoji: '🍜', name: '劉媽媽涼麵', hood: 'Da\'an', tags: ['carter'], desc: 'Mom\'s cold noodles — no-frills local spot done right. The kind of place that\'s been there forever and never needs to change.' },
     { cat: 'eats', rating: 4.0, emoji: '🍳', name: '大王漢寶殿', hood: 'Zhongshan', tags: ['carter'], desc: 'A classic Taiwanese breakfast shop. Breakfast sandwiches, soy milk, and scallion pancakes — the real local morning ritual.' },
     { cat: 'eats', rating: 3.9, emoji: '🍝', name: '柳家涼麵', hood: 'Zhongshan', tags: ['carter'], desc: 'Cold sesame noodles — a Taipei summer essential. Simple, cheap, and deeply satisfying. Carter saved this one for a reason.' },
+    { cat: 'eats', rating: 4.6, emoji: '🫕', name: "Wang's Broth", hood: 'Wanhua', tags: ['group'], desc: 'Michelin Bib Gourmand. A humble stall in Huaxi Street serving deeply flavorful Taiwanese braised pork rice and slow-cooked broth. The real deal.' },
+    { cat: 'eats', rating: 4.4, emoji: '🪿', name: 'A Cheng Goose', hood: 'Zhongshan', tags: ['group'], desc: 'A Taipei institution for goose meat — sliced cold with ginger and sesame oil. A distinctly Taiwanese dish that locals swear by.' },
+    { cat: 'eats', rating: 4.6, emoji: '🌮', name: 'Taqueria Pang', hood: 'Da\'an', tags: ['must','group'], desc: 'Michelin-recognized tacos in Taipei. Corn tortillas, bold fillings, and chef-level technique. Better than most tacos in the US. Reserve if you can.' },
+    { cat: 'eats', rating: 4.7, emoji: '🧅', name: 'Tian Jin Onion Pancake', hood: 'Da\'an', tags: ['famous','group'], desc: 'The most iconic crispy green onion pancake stand in Taipei, right near Yongkang St. Egg, sesame, basil — freshly made and insanely good. Cash only.' },
 
     // CAFES
     { cat: 'cafes', rating: 4.8, emoji: '🌺', name: 'KONZY KAVA', hood: 'Da\'an', tags: ['hidden','carter'], desc: 'A kava bar — rare in Taiwan and worth trying. Earthy, mellow, and totally unique. If you\'ve never had kava, this is the place.' },
@@ -540,6 +545,10 @@
     { cat: 'cafes', rating: 4.2, emoji: '✨', name: 'Miracle Coffee 東區', hood: 'Da\'an', tags: [], desc: 'A neighborhood specialty cafe in the East District. Nothing flashy, just good coffee and a cozy corner to sit in.' },
     { cat: 'cafes', rating: 4.1, emoji: '⛩️', name: '上島珈琲店 八德', hood: 'Songshan', tags: [], desc: 'Japanese-style coffee chain that\'s been a Taipei institution for decades. Old-school drip coffee, calm and no-rush.' },
     { cat: 'cafes', rating: 4.0, emoji: '📖', name: 'CE\' & LIB-RARY', hood: 'Zhongshan', tags: [], desc: 'Library-themed cafe on Liaoning Street. Books on the shelves, coffee in hand, chill playlist. Comfortable and low-key.' },
+    { cat: 'cafes', rating: 4.5, emoji: '🍵', name: 'Nap Tea', hood: 'Zhongzheng', tags: ['group'], desc: 'A cozy tea and boba spot near the city center. Good for a slow afternoon pit-stop — quality teas and a relaxed, sleepy vibe (as the name says).' },
+    { cat: 'cafes', rating: 4.5, emoji: '☕', name: 'FOMO Coffee', hood: 'Da\'an', tags: ['group'], desc: 'A beloved Da\'an specialty coffee shop — the name is accurate. Excellent espresso drinks, a neighborhood staple, and great opening hours.' },
+    { cat: 'cafes', rating: 4.3, emoji: '🧋', name: '50嵐 (50lan)', hood: 'Wanhua', tags: ['famous','group'], desc: 'Taiwan\'s most iconic boba chain — not a gimmick, genuinely great. Black tea with pearl is the classic order. Multiple locations across the city.' },
+    { cat: 'cafes', rating: 4.5, emoji: '🍃', name: 'Oolong Tea Project', hood: 'Zhongzheng', tags: ['group'], desc: 'A dedicated oolong tea shop showcasing Taiwan\'s best teas. If you want to understand what makes Taiwanese tea special, come here.' },
 
     // BARS
     { cat: 'bars', rating: 5.0, emoji: '🀄', name: 'Mahjong Masters', hood: 'Zhongshan', tags: ['hidden','carter'], desc: 'A social club built around mahjong with drinks. Perfect rating — completely unique. Teach your friends to play.' },
@@ -556,6 +565,7 @@
     { cat: 'bars', rating: 4.4, emoji: '🌇', name: 'Marco Polo Lounge', hood: 'Xinyi', tags: ['famous'], desc: 'Rooftop cocktail lounge at the Far Eastern Shangri-La. Sweeping Taipei views, dressed-up crowd, and classic cocktails.' },
     { cat: 'bars', rating: 4.4, emoji: '🍹', name: 'The Butcher\'s Son', hood: 'Zhongshan', tags: ['hidden'], desc: 'Hip, low-lit cocktail bar in a converted space. The kind of bar you discover and then come back to every night.' },
     { cat: 'bars', rating: 4.4, emoji: '🌱', name: 'Bar Root by -1', hood: 'Zhongshan', tags: ['carter'], desc: 'A cozy bar filled with plants and a beer pong table. Super chill, social vibe — great for a relaxed first drink.' },
+    { cat: 'bars', rating: 4.4, emoji: '✨', name: 'Wonder Bar', hood: 'Songshan', tags: ['group'], desc: 'A lively bar on Fuxing N Rd with a great playlist and solid drinks. Popular with a local crowd — good energy without being a full-on club.' },
 
     // CLUBS
     { cat: 'clubs', rating: 4.3, emoji: '🎧', name: 'Marquee', hood: 'Xinyi', tags: ['famous','carter'], desc: 'One of Taipei\'s biggest clubs, often hosting international DJs. The Xinyi nightlife strip at its most electric.' },
@@ -563,22 +573,23 @@
     { cat: 'clubs', rating: 3.7, emoji: '🔥', name: 'RUFF Night Club', hood: 'Xinyi', tags: ['carter'], desc: 'A gritty, underground nightclub energy in the Xinyi nightlife strip. Lower barrier than the big clubs — good for a wild, unfiltered night out.' },
 
     // NIGHT MARKETS
-    { cat: 'markets', rating: 4.5, emoji: '🔥', name: 'Ningxia Night Market', hood: 'Datong', tags: ['must','carter'], desc: 'Carter\'s pick for the most local experience — minimal tourists, incredible food. Try the taro balls, oyster omelette, and pork rice.' },
-    { cat: 'markets', rating: 4.4, emoji: '🌶️', name: 'Raohe Night Market', hood: 'Songshan', tags: ['must','famous'], desc: 'Compact, atmospheric street lined with food stalls. The pepper pork buns (胡椒餅) at the temple entrance are legendary.' },
-    { cat: 'markets', rating: 4.3, emoji: '🎪', name: 'Shilin Night Market', hood: 'Shilin', tags: ['must','famous','touristy'], desc: 'The biggest and most famous night market in Taipei. Go for the underground food court, fried chicken cutlets, and scallion pancakes. Yes it\'s touristy — still essential.' },
+    { cat: 'markets', rating: 4.5, emoji: '🔥', name: 'Ningxia Night Market', hood: 'Datong', tags: ['must','carter','group'], desc: 'Carter\'s pick for the most local experience — minimal tourists, incredible food. Try the taro balls, oyster omelette, and pork rice.' },
+    { cat: 'markets', rating: 4.4, emoji: '🌶️', name: 'Raohe Night Market', hood: 'Songshan', tags: ['must','famous','group'], desc: 'Compact, atmospheric street lined with food stalls. The pepper pork buns (胡椒餅) at the temple entrance are legendary.' },
+    { cat: 'markets', rating: 4.3, emoji: '🎪', name: 'Shilin Night Market', hood: 'Shilin', tags: ['must','famous','touristy','group'], desc: 'The biggest and most famous night market in Taipei. Go for the underground food court, fried chicken cutlets, and scallion pancakes. Yes it\'s touristy — still essential.' },
+    { cat: 'markets', rating: 4.3, emoji: '🌙', name: 'Nanjichang Night Market', hood: 'Zhongzheng', tags: ['group'], desc: 'A quieter, more local night market steps from the hotel. Good for a low-key first night — less crowded than Shilin, with solid street food and a real neighborhood feel.' },
 
     // ATTRACTIONS
     { cat: 'attractions', rating: 4.8, emoji: '⛰️', name: 'Elephant Mountain', hood: 'Nangang', tags: ['must','famous'], desc: 'A 20-minute hike up steps rewards you with the most iconic Taipei skyline view — Taipei 101 framed perfectly. Go at dusk.' },
-    { cat: 'attractions', rating: 4.7, emoji: '🏛️', name: 'Chiang Kai-shek Memorial', hood: 'Zhongzheng', tags: ['must','famous','touristy'], desc: 'One of Taipei\'s most iconic landmarks. The changing of the guard ceremony every hour is mesmerizing. The plaza at sunset is stunning.' },
+    { cat: 'attractions', rating: 4.7, emoji: '🏛️', name: 'Chiang Kai-shek Memorial', hood: 'Zhongzheng', tags: ['must','famous','touristy','group'], desc: 'One of Taipei\'s most iconic landmarks. The changing of the guard ceremony every hour is mesmerizing. The plaza at sunset is stunning.' },
     { cat: 'attractions', rating: 4.7, emoji: '🌻', name: '大佳河濱公園 太陽花花園', hood: 'Zhongshan', tags: ['carter'], desc: 'A seasonal sunflower sculpture garden along the riverside. Jenny\'s pick — when the flowers are up, it\'s one of the most photogenic spots in Taipei.' },
-    { cat: 'attractions', rating: 4.6, emoji: '🌳', name: 'Da\'an Forest Park', hood: 'Da\'an', tags: ['famous'], desc: 'Taipei\'s Central Park. Wide paths, a small lake, and tons of locals jogging or relaxing. Great for an early morning walk.' },
+    { cat: 'attractions', rating: 4.6, emoji: '🌳', name: 'Da\'an Forest Park', hood: 'Da\'an', tags: ['famous','group'], desc: 'Taipei\'s Central Park. Wide paths, a small lake, and tons of locals jogging or relaxing. Great for an early morning walk.' },
     { cat: 'attractions', rating: 4.6, emoji: '🪔', name: 'Longshan Temple', hood: 'Wanhua', tags: ['must','famous'], desc: 'Taipei\'s oldest and most atmospheric temple. Clouds of incense, devoted worshippers, and stunning traditional architecture.' },
-    { cat: 'attractions', rating: 4.6, emoji: '🏺', name: 'National Palace Museum', hood: 'Shilin', tags: ['famous','touristy'], desc: 'Holds one of the world\'s largest collections of Chinese imperial art and artifacts. The jade cabbage alone is worth the trip.' },
+    { cat: 'attractions', rating: 4.6, emoji: '🏺', name: 'National Palace Museum', hood: 'Shilin', tags: ['famous','touristy','group'], desc: 'Holds one of the world\'s largest collections of Chinese imperial art and artifacts. The jade cabbage alone is worth the trip.' },
     { cat: 'attractions', rating: 4.6, emoji: '🎨', name: 'Taipei Fine Arts Museum', hood: 'Zhongshan', tags: [], desc: 'One of Asia\'s premier contemporary art museums. Rotating exhibitions, beautiful brutalist architecture, and free on Saturdays.' },
     { cat: 'attractions', rating: 4.6, emoji: '⛰️', name: '金面山步道', hood: 'Neihu', tags: ['hidden','carter'], desc: 'A lesser-known hike with incredible 360° views of Taipei. Less crowded than Elephant Mountain, just as spectacular.' },
     { cat: 'attractions', rating: 4.6, emoji: '🏞️', name: '新北大都會公園', hood: 'New Taipei', tags: [], desc: 'A huge metropolitan park just outside Taipei in New Taipei City. Great for a half-day escape — wide open space and fresh air.' },
     { cat: 'attractions', rating: 4.6, emoji: '🎪', name: '蛙仔坑 遊戲場', hood: 'Zhongshan', tags: [], desc: 'A creatively designed outdoor play area that\'s actually fun for adults too. Unique slides and climbing structures set in nature.' },
-    { cat: 'attractions', rating: 4.5, emoji: '🏢', name: 'Taipei 101', hood: 'Xinyi', tags: ['must','famous','touristy'], desc: 'Go up to the observation deck (89F) for a 360° panoramic view of the city. Best at sunset or at night when the city glows.' },
+    { cat: 'attractions', rating: 4.5, emoji: '🏢', name: 'Taipei 101', hood: 'Xinyi', tags: ['must','famous','touristy','group'], desc: 'Go up to the observation deck (89F) for a 360° panoramic view of the city. Best at sunset or at night when the city glows.' },
     { cat: 'attractions', rating: 4.4, emoji: '🌸', name: '建國假日花市', hood: 'Da\'an', tags: ['carter'], desc: 'A massive weekend flower and plant market under the Jianguo overpass — only open Saturday and Sunday. Very local scene.' },
     { cat: 'attractions', rating: 4.4, emoji: '🏃', name: '大佳河濱公園', hood: 'Zhongshan', tags: [], desc: 'A long riverside park along the Keelung River with bike paths, lawns, and skyline views. Go at golden hour.' },
     { cat: 'attractions', rating: 4.4, emoji: '🌄', name: '福州山公園', hood: 'Da\'an', tags: ['carter'], desc: 'A small hill park with an illuminated trail and city view from the top. Quieter than Elephant Mountain, beautiful at night.' },
@@ -586,6 +597,10 @@
     { cat: 'attractions', rating: 4.3, emoji: '💧', name: '日光水岸廣場', hood: 'Xindian', tags: [], desc: 'A waterfront plaza in Xindian — open space, weekend events, and a calm riverside escape from the city buzz.' },
     { cat: 'attractions', rating: 4.3, emoji: '🌺', name: '榮星花園公園', hood: 'Zhongshan', tags: [], desc: 'A well-maintained city park with ponds, walking paths, and lots of greenery. Good for a morning stroll.' },
     { cat: 'attractions', rating: 4.3, emoji: '🗿', name: '中山公園', hood: 'Zhongshan', tags: [], desc: 'A historic memorial park in central Taipei. Quiet, leafy, and a nice contrast to the busy shopping streets surrounding it.' },
+    { cat: 'attractions', rating: 4.5, emoji: '🏛️', name: 'National Taiwan Museum', hood: 'Zhongzheng', tags: ['group'], desc: 'Taiwan\'s oldest museum, sitting beautifully inside 228 Peace Memorial Park. Natural history, indigenous culture, and colonial-era architecture. Free on certain days.' },
+    { cat: 'attractions', rating: 4.6, emoji: '🕊️', name: '228 Peace Memorial Park', hood: 'Zhongzheng', tags: ['group'], desc: 'A quiet, tree-lined park commemorating the 1947 February 28 Incident — a pivotal moment in Taiwan\'s history. Peaceful and reflective, great for a first morning stroll.' },
+    { cat: 'attractions', rating: 4.4, emoji: '🦁', name: 'Taipei Zoo', hood: 'Wenshan', tags: ['group'], desc: 'One of the largest zoos in Asia — much bigger than expected. The giant pandas and Formosan animals are the highlights. A surprisingly full half-day.' },
+    { cat: 'attractions', rating: 4.6, emoji: '♨️', name: 'Spring City Resort', hood: 'Beitou', tags: ['group'], desc: 'The best onsen resort in Beitou hot spring district. Multiple pools at different temperatures, indoor and outdoor. The perfect recovery day after nights out.' },
 
     // AREAS
     { cat: 'areas', rating: null, emoji: '🛹', name: 'Ximending', hood: 'Wanhua', tags: ['famous','touristy'], desc: 'Taipei\'s Times Square meets youth culture hub. Street fashion, underground music, tattoo parlors, food stalls, and neon lights. Touristy but genuinely cool.' },
