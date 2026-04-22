@@ -130,15 +130,6 @@
       min-width: 90px;
     }
 
-    .stat-num {
-      font-family: 'Poppins', sans-serif;
-      font-size: 26px;
-      font-weight: 900;
-      color: #fff;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-
     .stat-label {
       font-family: 'Poppins', sans-serif;
       font-size: 10px;
@@ -329,6 +320,13 @@
       text-transform: uppercase;
     }
 
+    .card-img {
+      height: 175px;
+      background-size: cover;
+      background-position: center;
+      background-color: #ede8e0;
+    }
+
     /* ── CARDS ── */
     #cards-section {
       max-width: 1200px;
@@ -467,10 +465,10 @@
       Carter welcomes you<br>to Taipei! <span class="flag">🇹🇼</span>
     </h1>
     <div class="hero-stats">
-      <div class="hero-stat"><span class="stat-num" id="stat-famous"></span><span class="stat-label">Iconic</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-must"></span><span class="stat-label">Must Try</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-carter"></span><span class="stat-label">Carter's List</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-group"></span><span class="stat-label">Your Spreadsheet</span></div>
+      <div class="hero-stat"><span class="stat-label">Iconic</span></div>
+      <div class="hero-stat"><span class="stat-label">Must Try</span></div>
+      <div class="hero-stat"><span class="stat-label">Carter's List</span></div>
+      <div class="hero-stat"><span class="stat-label">Your Spreadsheet</span></div>
     </div>
     <button class="hero-cta" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
       Explore the guide →
@@ -638,8 +636,8 @@
     { cat: 'bars', rating: 4.4, emoji: '🍹', name: "The Butcher's Son", hood: 'Zhongshan', tags: ['hidden'], desc: 'Hip, low-lit cocktail bar in a converted space. The kind of bar you discover and then come back to every night.' },
     { cat: 'bars', rating: 4.4, emoji: '🌱', name: 'Bar Root by -1', hood: 'Zhongshan', tags: ['carter'], desc: 'A cozy bar filled with plants and a beer pong table. Super chill, social vibe — great for a relaxed first drink.' },
     { cat: 'bars', rating: 4.4, emoji: '✨', name: 'Wonder Bar', hood: 'Songshan', tags: ['group'], desc: 'A lively bar on Fuxing N Rd with a great playlist and solid drinks. Popular with a local crowd — good energy without being a full-on club.' },
-    { cat: 'bars', rating: 4.7, emoji: '🥃', name: 'Fake Sober', hood: "Da'an", tags: ['carter','hidden'], desc: 'A standout craft cocktail bar with a name that earns its irony. Creative, well-executed drinks in a cool, unpretentious space.' },
-    { cat: 'bars', rating: 4.8, emoji: '🌙', name: 'Sleep No More', hood: 'Zhongshan', tags: ['must','carter','hidden'], desc: 'One of the most atmospheric bars in Taipei. Dark, intimate, and theatrical — the cocktails match the mood perfectly. A serious bar experience.' },
+    { cat: 'bars', rating: 4.7, emoji: '🥃', name: 'Fake Sober', hood: 'Xinyi', tags: ['carter'], desc: 'A standout craft cocktail bar with a name that earns its irony. Creative, well-executed drinks in a cool, unpretentious space.' },
+    { cat: 'bars', rating: 4.8, emoji: '🌙', name: 'Sleep No More', hood: 'Xinyi', tags: ['must','famous','carter'], desc: 'One of the most atmospheric bars in Taipei. Dark, intimate, and theatrical — the cocktails match the mood perfectly. A serious bar experience.' },
 
     // CLUBS
     { cat: 'clubs', rating: 4.5, emoji: '🎧', name: 'DD', hood: 'Xinyi', tags: ['carter'], desc: 'One of the hottest clubs in Taipei right now. Great sound system, strong line-ups, and a crowd that actually knows how to move.' },
@@ -719,6 +717,121 @@
     return `<span class="mrt-badge" style="background:${info.color}">${info.stop}</span>`;
   }
 
+  const IMGS = {
+    sushi:         'photo-1617196034183-421b4040d20d',
+    ramen:         'photo-1569050467447-ce54b3bbc37d',
+    hotpot:        'photo-1574071318508-1cdbab80d002',
+    korean_bbq:    'photo-1590301157890-4810ed352733',
+    curry:         'photo-1585937421612-70a008356fbe',
+    tacos:         'photo-1565299585323-38d6b0865b47',
+    fried_chicken: 'photo-1626645738196-c2a7c87a8f58',
+    steak:         'photo-1544025162-d76538b2d1f8',
+    dumplings:     'photo-1496116218417-1a781b1ef3c9',
+    beef_noodle:   'photo-1548943487-a2e4e43b4853',
+    noodles:       'photo-1582282538758-39571cecc0f7',
+    seafood:       'photo-1414235077428-338989a2e8c0',
+    fine_dining:   'photo-1559339352-11d035aa65de',
+    izakaya:       'photo-1517248135467-4c7edcad34c4',
+    craft_beer:    'photo-1436076863939-06870fe779c2',
+    breakfast:     'photo-1504630083234-14187a9df0f5',
+    pasta:         'photo-1473093295043-cdd812d0e601',
+    street_food:   'photo-1466978913421-dad2ebd01d17',
+    coffee:        'photo-1495474472287-4d71bcdd2085',
+    cafe:          'photo-1501339847302-ac426a4a7cbb',
+    cafe_garden:   'photo-1521017432531-fbd92d768814',
+    bookstore:     'photo-1481627834876-b7833e8f5570',
+    roastery:      'photo-1442512595331-e89e73853f31',
+    boba:          'photo-1558618666-fcd25c85cd64',
+    tea:           'photo-1525385133512-2f3bdd039054',
+    cocktail:      'photo-1551024709-8f23befc548f',
+    speakeasy:     'photo-1543007631-283050bb3e8c',
+    rooftop_bar:   'photo-1575037614876-c38a4d44f5b8',
+    jazz_bar:      'photo-1415201364774-f6f0bb35f28f',
+    bar:           'photo-1470337458703-46ad1756a187',
+    nightclub:     'photo-1516450360452-9312f5e86fc7',
+    dancefloor:    'photo-1545128485-c400ce7b4c71',
+    night_market:  'photo-1466978913421-dad2ebd01d17',
+    taipei_101:    'photo-1508193638397-1c4234db14d8',
+    temple:        'photo-1590736969596-3d9e71b11073',
+    park:          'photo-1552083375-1447ce886485',
+    hike:          'photo-1464822759023-fed622ff2c3b',
+    museum:        'photo-1554907984-15263bfd63bd',
+    art_museum:    'photo-1533929736458-ca588d08c8be',
+    hot_spring:    'photo-1571896349842-33c89424de2d',
+    flower_market: 'photo-1508610048659-a06b669e3321',
+    riverside:     'photo-1504701954957-2010ec3bcec1',
+    zoo:           'photo-1564349683136-77e08dba1ef7',
+    taipei_street: 'photo-1555685812-4b943f1cb0eb',
+    city_skyline:  'photo-1537108437888-1451ca9bdb38',
+    urban_street:  'photo-1545454675-3b0a5e052b05',
+  };
+
+  const PLACE_IMGS = {
+    'Ning Ryotei':'sushi','Yiqi Yakitori':'izakaya','Yoshikawa Seafood Bowl':'seafood',
+    'Lava Spicy Hot Pot':'hotpot','Curry Lab. Tokyo':'curry','Xiao Da Oyster Noodles':'noodles',
+    'Gou Yixia Izakaya':'izakaya','Chuang Sushi & Donburi':'sushi','Din Tai Fung':'dumplings',
+    'HOOTERS Xinyi':'fried_chicken','Shaojiu Korean BBQ':'korean_bbq','Aibon Steak Bistro':'steak',
+    'Yu Sushi Lishui':'sushi','Wen Curry':'curry','Huiguo Hot Pot':'hotpot',
+    'Ossu Handroll & Bar':'sushi','Hotties Fried Chicken':'fried_chicken','EOI Fine Dining':'fine_dining',
+    'Asashi Sushi':'sushi','Sushi Ichita':'sushi','Taihu Craft Beer Taproom':'craft_beer',
+    'Addiction Aquatic Development':'seafood','Fu Hang Soy Milk':'breakfast','RAW':'fine_dining',
+    'Zhanan Bistro':'izakaya','Gubei Fine Dining':'fine_dining','Chale Tacos':'tacos',
+    'Yong Kang Beef Noodle':'beef_noodle','Caoshan Night View Restaurant':'city_skyline',
+    'Crispy Stinky Tofu':'street_food','Jiajian Shabu Shabu':'hotpot','Shinshinian Omakase':'sushi',
+    "You're Back Ramen":'ramen','Weekend Fried Chicken Club':'fried_chicken','Torisoba Take':'ramen',
+    'Douhua Zhuang':'street_food','BEPPIN PASTA':'pasta','Shiyuan Salt & Pepper Chicken':'fried_chicken',
+    'Da Shixiong Noodles':'noodles',"UMAMI Le Blé d'Or":'craft_beer','Hangzhou Soup Dumplings':'dumplings',
+    'Husband & Wife Spicy Hot Pot':'hotpot','El Sabroso Mexican Food':'tacos',
+    'A-Zong Oyster Noodles':'street_food',"Liu Mama's Cold Noodles":'noodles',
+    'Da Wang Taiwanese Breakfast':'breakfast',"Liu's Cold Sesame Noodles":'noodles',
+    "Wang's Broth":'street_food','A Cheng Goose':'fine_dining','Taqueria Pang':'tacos',
+    'Tian Jin Onion Pancake':'street_food',
+    'KONZY KAVA':'bar','Chinguo Cafe':'cafe','Weight Books':'bookstore','Sky Cofi':'coffee',
+    'Simple Kaffa Xinyi':'coffee','CURISTA COFFEE':'coffee','Hua Zhai Cafe':'cafe_garden',
+    'Rufous Coffee':'coffee','Cafe Showroom':'cafe','basis coffee.':'coffee',
+    'TWATUTIAN Coffee & Co.':'cafe','Sunsun Museum Cafe':'art_museum','VWI by CHADWANG':'roastery',
+    'Fong Da Coffee':'cafe','Beckhome Roasting House':'roastery','Odd One Out':'coffee',
+    'URBAN Research':'cafe','Ruins Coffee Roasters':'roastery','Miracle Coffee':'coffee',
+    'Ueshima Coffee':'cafe',"CE' & LIB-RARY":'bookstore','FOMO Coffee':'coffee',
+    'Nap Tea':'tea','Xing Fu Tang':'boba','Ten Ren Tea':'tea','WooTea':'boba',
+    'LePhare':'boba','Guiji':'boba','50lan':'boba','Oolong Tea Project':'tea',
+    'Book ing':'speakeasy','Fuzzy April':'cocktail','Opera Cocktail Bar':'cocktail',
+    'Two Three Comedy Club':'bar','Ounce Taipei':'speakeasy','B Line by A Train':'jazz_bar',
+    'Brass Monkey':'rooftop_bar','WA-SHU':'cocktail','BANKER Martini Bar':'cocktail',
+    'Sappho Live Jazz':'jazz_bar','Marco Polo Lounge':'rooftop_bar',"The Butcher's Son":'bar',
+    'Bar Root by -1':'bar','Wonder Bar':'bar','Fake Sober':'cocktail','Sleep No More':'speakeasy',
+    'DD':'nightclub','AI':'dancefloor','Wave':'nightclub','Kor':'dancefloor',
+    'Barcode':'nightclub','RUFF Night Club':'dancefloor',
+    'Ningxia Night Market':'night_market','Raohe Night Market':'night_market',
+    'Shilin Night Market':'night_market','Nanjichang Night Market':'night_market',
+    'Elephant Mountain':'hike','Chiang Kai-shek Memorial':'temple',
+    'Dajia Riverside Sunflower Garden':'flower_market',"Da'an Forest Park":'park',
+    'Longshan Temple':'temple','National Palace Museum':'museum',
+    'Taipei Fine Arts Museum':'art_museum','Jinmianshan Trail':'hike',
+    'New Taipei Metropolitan Park':'park','Wazikeng Playground':'park',
+    'Taipei 101':'taipei_101','Jianguo Weekend Flower Market':'flower_market',
+    'Dajia Riverside Park':'riverside','Fuzhou Mountain Park':'hike',
+    'Qingfeng Pavilion':'temple','Sunshine Riverside Plaza':'riverside',
+    'Rongxing Garden Park':'park','Zhongshan Park':'park',
+    'National Taiwan Museum':'museum','228 Peace Memorial Park':'park',
+    'Taipei Zoo':'zoo','Spring City Resort':'hot_spring',
+    'Ximending':'taipei_street','Xinyi District':'city_skyline','Zhongshan':'urban_street',
+    'Dongqu (East District)':'taipei_street',"Da'an":'urban_street','Beitou':'hot_spring',
+  };
+
+  const CAT_IMG = {
+    eats:'fine_dining', cafes:'cafe', boba:'boba', bars:'cocktail',
+    clubs:'nightclub', markets:'night_market', attractions:'park', areas:'taipei_street',
+  };
+
+  function getImgStyle(place) {
+    const key = PLACE_IMGS[place.name] || CAT_IMG[place.cat];
+    const id  = IMGS[key];
+    return id
+      ? `background-image:url('https://images.unsplash.com/${id}?auto=format&fit=crop&w=600&q=75')`
+      : '';
+  }
+
   let activeCategory = 'eats';
 
   function renderTags(tags) {
@@ -752,7 +865,7 @@
       card.className = 'card';
       card.style.animationDelay = `${i * 60}ms`;
       card.innerHTML = `
-        <div class="card-top" style="background:${catData.color}"></div>
+        <div class="card-img" style="${getImgStyle(place)}"></div>
         <div class="card-body">
           <div class="card-header">
             <span class="card-emoji">${place.emoji}</span>
@@ -780,11 +893,6 @@
       document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
   });
-
-  document.getElementById('stat-famous').textContent = PLACES.filter(p => p.tags.includes('famous')).length;
-  document.getElementById('stat-must').textContent   = PLACES.filter(p => p.tags.includes('must')).length;
-  document.getElementById('stat-carter').textContent = PLACES.filter(p => p.tags.includes('carter')).length;
-  document.getElementById('stat-group').textContent  = PLACES.filter(p => p.tags.includes('group')).length;
 
   render('eats');
 </script>
