@@ -377,22 +377,42 @@
     }
 
     @media (max-width: 560px) {
-      #cards-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      #cards-section { padding: 20px 12px 48px; }
-      #filters-bar { padding: 12px 12px 0; gap: 6px; }
-      .filter-btn { font-size: 11px; padding: 5px 11px; }
-      .card-img { height: 120px; }
-      .card-body { padding: 10px 12px 12px; }
-      .card-emoji { font-size: 18px; }
-      .card-name { font-size: 13px; }
-      .mrt-badge { font-size: 9px; padding: 2px 5px; }
-      .card-desc { font-size: 12px; line-height: 1.5; }
-      .card-rating { font-size: 10px; }
-      .tag { font-size: 9px; padding: 1px 5px; }
+      #cards-grid        { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      #cards-section     { padding: 18px 12px 48px; }
+      #filters-bar       { padding: 12px 12px 0; gap: 6px; }
+      .filter-btn        { font-size: 11px; padding: 5px 10px; }
+
+      /* Hide emoji — redundant with cover image, frees up width */
+      .card-emoji        { display: none; }
+
+      /* Card image */
+      .card-img          { height: 110px; }
+
+      /* Card body — tighter padding */
+      .card-body         { padding: 8px 10px 10px; }
+      .card-header       { gap: 0; margin-bottom: 5px; }
+
+      /* Name row: name on left, rating on right — both on their own lines */
+      .card-name-row     { align-items: flex-start; gap: 4px; }
+      .name-mrt          { flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; flex: 1; }
+      .card-name         { font-size: 12px; line-height: 1.25; font-weight: 700;
+                           white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+      .mrt-badge         { font-size: 9px; padding: 2px 5px; }
+      .card-rating       { font-size: 10px; white-space: nowrap; flex-shrink: 0; padding-top: 1px; }
+
+      /* Tags */
+      .card-tags         { gap: 3px; margin: 4px 0 2px; }
+      .tag               { font-size: 9px; padding: 1px 5px; }
+
+      /* Clamp description to 3 lines */
+      .card-desc         { font-size: 11.5px; line-height: 1.45;
+                           display: -webkit-box; -webkit-line-clamp: 3;
+                           -webkit-box-orient: vertical; overflow: hidden; }
     }
 
     @media (max-width: 360px) {
       #cards-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+      .card-img   { height: 95px; }
     }
 
     .card {
