@@ -9,6 +9,7 @@
     :root {
       --color-eats: #FF6B6B;
       --color-cafes: #FFB347;
+      --color-boba: #A855F7;
       --color-bars: #9B59B6;
       --color-clubs: #E74C3C;
       --color-markets: #E91E8C;
@@ -238,6 +239,7 @@
 
     .tab[data-cat="eats"].active        { background: var(--color-eats); }
     .tab[data-cat="cafes"].active       { background: var(--color-cafes); }
+    .tab[data-cat="boba"].active        { background: var(--color-boba); }
     .tab[data-cat="bars"].active        { background: var(--color-bars); }
     .tab[data-cat="clubs"].active       { background: var(--color-clubs); }
     .tab[data-cat="markets"].active     { background: var(--color-markets); }
@@ -427,6 +429,7 @@
     <div id="tabs">
       <button class="tab active" data-cat="eats">🍜 Eats</button>
       <button class="tab" data-cat="cafes">☕ Cafes</button>
+      <button class="tab" data-cat="boba">🧋 Boba</button>
       <button class="tab" data-cat="bars">🍸 Bars</button>
       <button class="tab" data-cat="clubs">🎉 Clubs</button>
       <button class="tab" data-cat="markets">🌃 Night Markets</button>
@@ -452,6 +455,7 @@
   const CATEGORIES = {
     eats:        { label: '🍜 Eats',         color: '#FF6B6B', desc: 'The best food in Taipei — from iconic institutions to hidden local gems.' },
     cafes:       { label: '☕ Cafes',         color: '#FFB347', desc: 'Taipei has one of the world\'s best cafe cultures. These are the spots.' },
+    boba:        { label: '🧋 Boba',          color: '#A855F7', desc: 'Taiwan invented bubble tea. Here\'s where to drink it properly.' },
     bars:        { label: '🍸 Bars',          color: '#9B59B6', desc: 'Craft cocktails, jazz bars, rooftops, and hidden speakeasies.' },
     clubs:       { label: '🎉 Clubs',         color: '#E74C3C', desc: 'Where Taipei dances. The best nightclubs for a proper night out.' },
     markets:     { label: '🌃 Night Markets', color: '#E91E8C', desc: 'Go hungry. These are Taipei\'s legendary street food markets.' },
@@ -466,7 +470,7 @@
     friend:   { label: 'Friend Rec',   color: '#8E44AD' },
     hidden:   { label: 'Hidden Gem',   color: '#D68910' },
     touristy: { label: 'Tourist Spot',  color: '#808B96' },
-    group:    { label: "Friends' List", color: '#E67E22' },
+    group:    { label: 'Your Spreadsheet', color: '#E67E22' },
   };
 
   const PLACES = [
@@ -480,7 +484,7 @@
     { cat: 'eats', rating: 4.8, emoji: '🍻', name: '狗一下居食酒堂', hood: 'Da\'an', tags: ['carter'], desc: 'A buzzing izakaya with great food and cold beer. Lively, loud, and exactly what you want after a long day of exploring.' },
     { cat: 'eats', rating: 4.8, emoji: '🍱', name: '創鮨 丼飯壽司', hood: 'Zhongshan', tags: ['carter'], desc: 'Creative Japanese donburi and sushi in an intimate space. The omakase bowls are outstanding value.' },
     { cat: 'eats', rating: 4.7, emoji: '🥟', name: 'Din Tai Fung', hood: 'Da\'an', tags: ['must','famous','touristy','group'], desc: 'World-famous xiao long bao (soup dumplings). The original Xinyi Road location is a Taipei rite of passage. Get there early.' },
-    { cat: 'eats', rating: 4.7, emoji: '🍗', name: 'HOOTERS 信義', hood: 'Xinyi', tags: ['carter'], desc: 'Carter\'s guilty pleasure. Wings, cold beer, and a lively crowd in the heart of Xinyi. Good pre-game spot before hitting the clubs.' },
+    { cat: 'eats', rating: 4.7, emoji: '🍗', name: 'HOOTERS 信義', hood: 'Xinyi', tags: ['carter'], desc: 'Wings, cold beer, and a lively crowd right in the heart of Xinyi. A solid pre-game spot before hitting the clubs.' },
     { cat: 'eats', rating: 4.7, emoji: '🥩', name: '燒酒烤烤豬', hood: 'Da\'an', tags: ['carter'], desc: 'Korean BBQ done really well — great quality pork belly and ribs with solid soju selections. Get a big group together.' },
     { cat: 'eats', rating: 4.7, emoji: '🥩', name: '艾朋牛排餐酒館', hood: 'Da\'an', tags: [], desc: 'A sophisticated steak and wine bistro. Excellent cuts, thoughtful wine pairings, and a candlelit ambiance. Good date spot.' },
     { cat: 'eats', rating: 4.7, emoji: '🍣', name: '游壽司 麗水店', hood: 'Da\'an', tags: ['carter'], desc: 'Counter sushi in Da\'an — fresh, precise, and more affordable than omakase. Great for a sushi fix.' },
@@ -545,10 +549,15 @@
     { cat: 'cafes', rating: 4.2, emoji: '✨', name: 'Miracle Coffee 東區', hood: 'Da\'an', tags: [], desc: 'A neighborhood specialty cafe in the East District. Nothing flashy, just good coffee and a cozy corner to sit in.' },
     { cat: 'cafes', rating: 4.1, emoji: '⛩️', name: '上島珈琲店 八德', hood: 'Songshan', tags: [], desc: 'Japanese-style coffee chain that\'s been a Taipei institution for decades. Old-school drip coffee, calm and no-rush.' },
     { cat: 'cafes', rating: 4.0, emoji: '📖', name: 'CE\' & LIB-RARY', hood: 'Zhongshan', tags: [], desc: 'Library-themed cafe on Liaoning Street. Books on the shelves, coffee in hand, chill playlist. Comfortable and low-key.' },
-    { cat: 'cafes', rating: 4.5, emoji: '🍵', name: 'Nap Tea', hood: 'Zhongzheng', tags: ['group'], desc: 'A cozy tea and boba spot near the city center. Good for a slow afternoon pit-stop — quality teas and a relaxed, sleepy vibe (as the name says).' },
+    { cat: 'boba', rating: 4.5, emoji: '🍵', name: 'Nap Tea', hood: 'Zhongzheng', tags: ['group'], desc: 'A cozy tea and boba spot near the city center. Good for a slow afternoon pit-stop — quality teas and a relaxed, sleepy vibe (as the name says).' },
     { cat: 'cafes', rating: 4.5, emoji: '☕', name: 'FOMO Coffee', hood: 'Da\'an', tags: ['group'], desc: 'A beloved Da\'an specialty coffee shop — the name is accurate. Excellent espresso drinks, a neighborhood staple, and great opening hours.' },
-    { cat: 'cafes', rating: 4.3, emoji: '🧋', name: '50嵐 (50lan)', hood: 'Wanhua', tags: ['famous','group'], desc: 'Taiwan\'s most iconic boba chain — not a gimmick, genuinely great. Black tea with pearl is the classic order. Multiple locations across the city.' },
-    { cat: 'cafes', rating: 4.5, emoji: '🍃', name: 'Oolong Tea Project', hood: 'Zhongzheng', tags: ['group'], desc: 'A dedicated oolong tea shop showcasing Taiwan\'s best teas. If you want to understand what makes Taiwanese tea special, come here.' },
+    { cat: 'boba', rating: 4.8, emoji: '🧋', name: 'Xing Fu Tang', hood: 'Ximending', tags: ['must','famous'], desc: 'The OG brown sugar pearl milk tea — Xing Fu Tang\'s stir-fried caramelized pearls are legendary. Watch them made fresh in front of you. Line is worth it.' },
+    { cat: 'boba', rating: 4.7, emoji: '🍵', name: 'Ten Ren Tea', hood: 'Multiple', tags: ['famous'], desc: 'One of Taiwan\'s oldest and most prestigious tea houses. Fresh-brewed oolong and jasmine teas with pearls. The real Taiwanese tea experience at accessible prices.' },
+    { cat: 'boba', rating: 4.6, emoji: '🌸', name: 'WooTea', hood: 'Multiple', tags: ['carter'], desc: 'A premium Taiwanese tea brand known for high-quality oolong-based milk teas. Cleaner and less sweet than most chains — the teas actually taste like tea.' },
+    { cat: 'boba', rating: 4.7, emoji: '✨', name: 'LePhare', hood: 'Da\'an', tags: ['carter'], desc: 'A French-Taiwanese tea concept with creative seasonal flavors. Beautifully packaged drinks that taste as good as they look. A step above the usual boba shop.' },
+    { cat: 'boba', rating: 4.6, emoji: '👑', name: 'Guiji', hood: 'Zhongshan', tags: ['carter'], desc: 'A beloved Taiwanese tea brand with elegant, well-balanced milk teas. Known for its consistent quality and the richness of its tea base. Local favorite.' },
+    { cat: 'boba', rating: 4.3, emoji: '🧋', name: '50嵐 (50lan)', hood: 'Multiple', tags: ['famous','group'], desc: 'Taiwan\'s most iconic boba chain — genuinely great. Black tea with pearl is the classic order. Multiple locations across the city.' },
+    { cat: 'boba', rating: 4.5, emoji: '🍃', name: 'Oolong Tea Project', hood: 'Zhongzheng', tags: ['group'], desc: 'A dedicated oolong tea shop showcasing Taiwan\'s best teas. If you want to understand what makes Taiwanese tea special, come here.' },
 
     // BARS
     { cat: 'bars', rating: 5.0, emoji: '🀄', name: 'Mahjong Masters', hood: 'Zhongshan', tags: ['hidden','carter'], desc: 'A social club built around mahjong with drinks. Perfect rating — completely unique. Teach your friends to play.' },
