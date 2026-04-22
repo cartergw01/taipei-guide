@@ -150,13 +150,16 @@
     }
 
     .hero-cta {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
       background: #fff;
       color: var(--text);
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
       font-size: 15px;
-      padding: 13px 30px;
+      padding: 14px 30px;
       border-radius: 50px;
       text-decoration: none;
       box-shadow: 0 6px 24px rgba(0,0,0,0.22);
@@ -284,10 +287,12 @@
     }
 
     .mrt-badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
       font-size: 10px;
       font-weight: 700;
-      padding: 2px 7px;
+      padding: 3px 7px;
       border-radius: 50px;
       color: #fff;
       letter-spacing: 0.02em;
@@ -311,9 +316,12 @@
     }
 
     .tag {
+      display: inline-flex;
+      align-items: center;
+      line-height: 1;
       font-size: 10px;
       font-weight: 700;
-      padding: 2px 8px;
+      padding: 3px 8px;
       border-radius: 50px;
       color: #fff;
       letter-spacing: 0.04em;
@@ -451,10 +459,10 @@
       Carter welcomes you<br>to Taipei! <span class="flag">🇹🇼</span>
     </h1>
     <div class="hero-stats">
-      <div class="hero-stat"><span class="stat-num" id="stat-famous"></span><span class="stat-label">Famous Places</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-must"></span><span class="stat-label">Must-See Spots</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-carter"></span><span class="stat-label">Carter's Picks</span></div>
-      <div class="hero-stat"><span class="stat-num" id="stat-group"></span><span class="stat-label">From the Spreadsheet</span></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-famous"></span><span class="stat-label">Iconic</span></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-must"></span><span class="stat-label">Must Try</span></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-carter"></span><span class="stat-label">Carter's ♥</span></div>
+      <div class="hero-stat"><span class="stat-num" id="stat-group"></span><span class="stat-label">Your Spreadsheet</span></div>
     </div>
     <button class="hero-cta" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
       Explore the guide →
