@@ -52,7 +52,7 @@
     #hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&w=2400&q=85');
+      background-image: url('https://images.pexels.com/photos/28617722/pexels-photo-28617722/free-photo-of-taipei-101-skyline-at-night-from-elephant-mountain.jpeg?auto=compress&cs=tinysrgb&w=2400');
       background-size: cover;
       background-position: center 30%;
       filter: brightness(0.85);
@@ -1407,11 +1407,7 @@
   }
 
   function tick(ts) {
-    // Clear with slight fade for trail glow
-    ctx.globalAlpha = 0.22;
-    ctx.fillStyle   = '#000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.globalAlpha = 1;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Scheduled launches
     if (schedIdx < schedule.length && ts >= schedule[schedIdx]) {
