@@ -646,6 +646,13 @@
     }
 
     footer span { opacity: 0.6; }
+
+    #fireworks {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -654,6 +661,7 @@
 <section id="hero">
   <div id="hero-bg"></div>
   <div id="hero-overlay"></div>
+  <canvas id="fireworks"></canvas>
 
   <div class="hero-content">
     <h1 class="hero-title">
@@ -1258,6 +1266,204 @@
   applyTheme(saved === 'dark' || (!saved && prefersDark));
 
   themeToggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
+</script>
+
+<script>
+(function() {
+  const canvas = document.getElementById('fireworks');
+  const ctx    = canvas.getContext('2d');
+  const hero   = document.getElementById('hero');
+  const COLORS = [
+    '#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bff',
+    '#ffb347','#c9f0ff','#ff9f7f','#ffffff','#ffe66d',
+  ];
+
+  function resize() {
+    canvas.width  = hero.offsetWidth;
+    canvas.height = hero.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── Particle ──
+  class Particle {
+    constructor(x, y, color, vx, vy, size) {
+      this.x = x; this.y = y;
+      this.vx = vx; this.vy = vy;
+      this.color = color;
+      this.alpha = 1;
+      this.size  = size || (Math.random() * 2.5 + 1);
+      this.decay = Math.random() * 0.012 + 0.008;
+      this.gravity = 0.06;
+      this.trail = [];
+    }
+    update() {
+      this.trail.push({ x: this.x, y: this.y, a: this.alpha });
+      if (this.trail.length > 6) this.trail.shift();
+      this.vy += this.gravity;
+      this.vx *= 0.98;
+      this.x  += this.vx;
+      this.y  += this.vy;
+      this.alpha -= this.decay;
+    }
+    draw() {
+      for (let i = 0; i < this.trail.length; i++) {
+        const t = this.trail[i];
+        ctx.globalAlpha = t.a * (i / this.trail.length) * 0.4;
+        ctx.fillStyle   = this.color;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, this.size * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = this.alpha;
+      ctx.fillStyle   = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+    isDead() { return this.alpha <= 0; }
+  }
+
+  // ── Rocket ──
+  class Rocket {
+    constructor() {
+      this.x     = canvas.width * (0.15 + Math.random() * 0.7);
+      this.y     = canvas.height;
+      this.targetY = canvas.height * (0.1 + Math.random() * 0.45);
+      this.vy    = -10 - Math.random() * 5;
+      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.trail = [];
+      this.exploded = false;
+    }
+    update(particles) {
+      this.trail.push({ x: this.x, y: this.y });
+      if (this.trail.length > 10) this.trail.shift();
+      this.vy *= 0.98;
+      this.y += this.vy;
+      if (this.y <= this.targetY) {
+        this.explode(particles);
+        this.exploded = true;
+      }
+    }
+    explode(particles) {
+      const count = 80 + Math.floor(Math.random() * 60);
+      const color2 = COLORS[Math.floor(Math.random() * COLORS.length)];
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.3;
+        const speed = 1.5 + Math.random() * 4;
+        const c = Math.random() < 0.3 ? color2 : this.color;
+        particles.push(new Particle(
+          this.x, this.y, c,
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed,
+          Math.random() * 2.5 + 0.8
+        ));
+      }
+      // Sparkle ring
+      if (Math.random() < 0.5) {
+        for (let i = 0; i < 20; i++) {
+          const angle = (Math.PI * 2 * i) / 20;
+          const speed = 6 + Math.random() * 2;
+          particles.push(new Particle(
+            this.x, this.y, '#ffffff',
+            Math.cos(angle) * speed,
+            Math.sin(angle) * speed,
+            1
+          ));
+        }
+      }
+    }
+    draw() {
+      for (let i = 0; i < this.trail.length; i++) {
+        const t = this.trail[i];
+        ctx.globalAlpha = (i / this.trail.length) * 0.6;
+        ctx.fillStyle   = this.color;
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle   = '#fff';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const particles = [];
+  const rockets   = [];
+  let lastLaunch  = 0;
+
+  // Schedule: burst at 0.5s, 1.5s, 2.5s, then every 4-6s
+  const schedule = [500, 1500, 2500];
+  let schedIdx = 0;
+  let nextAuto = 8000;
+
+  function launchBurst(n) {
+    for (let i = 0; i < n; i++) {
+      setTimeout(() => rockets.push(new Rocket()), i * 220);
+    }
+  }
+
+  function tick(ts) {
+    // Clear with slight fade for trail glow
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle   = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1;
+
+    // Scheduled launches
+    if (schedIdx < schedule.length && ts >= schedule[schedIdx]) {
+      launchBurst(2 + schedIdx);
+      schedIdx++;
+    }
+
+    // Auto repeating bursts
+    if (ts >= nextAuto) {
+      launchBurst(2 + Math.floor(Math.random() * 3));
+      nextAuto = ts + 4000 + Math.random() * 3000;
+    }
+
+    // Update & draw rockets
+    for (let i = rockets.length - 1; i >= 0; i--) {
+      rockets[i].update(particles);
+      if (rockets[i].exploded) { rockets.splice(i, 1); continue; }
+      rockets[i].draw();
+    }
+
+    // Update & draw particles
+    for (let i = particles.length - 1; i >= 0; i--) {
+      particles[i].update();
+      if (particles[i].isDead()) { particles.splice(i, 1); continue; }
+      particles[i].draw();
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+
+  // Click anywhere on hero to trigger a burst
+  hero.addEventListener('click', function(e) {
+    if (e.target.closest('button, a, .hero-stat')) return;
+    const rect = hero.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const count = 80 + Math.floor(Math.random() * 40);
+    const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const color2 = COLORS[Math.floor(Math.random() * COLORS.length)];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+      const speed = 2 + Math.random() * 5;
+      particles.push(new Particle(
+        x, e.clientY - rect.top,
+        Math.random() < 0.4 ? color2 : color,
+        Math.cos(angle) * speed,
+        Math.sin(angle) * speed
+      ));
+    }
+  });
+})();
 </script>
 
 </body>
