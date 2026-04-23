@@ -1498,8 +1498,7 @@
   }
 
   const saved = localStorage.getItem('theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-  applyTheme(saved === 'dark' || (!saved && prefersDark));
+  applyTheme(saved ? saved === 'dark' : true);
 
   themeToggle.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
   themeToggleMobile.addEventListener('click', () => applyTheme(!document.body.classList.contains('dark')));
