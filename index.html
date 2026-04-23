@@ -4,6 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Carter's Taipei Guide</title>
+  <meta
+    name="description"
+    content="ni hao Emily, Tim, Allison, & Andrea! here's a guide on where to eat, drink, party, and places to see in Taipei."
+  />
+  <meta name="theme-color" content="#fffbf5" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Carter's Taipei Guide" />
+  <meta
+    property="og:description"
+    content="ni hao Emily, Tim, Allison, & Andrea! here's a guide on where to eat, drink, party, and places to see in Taipei."
+  />
+  <meta property="og:image" content="/assets/share-preview.png" />
+  <meta property="og:image:width" content="1280" />
+  <meta property="og:image:height" content="633" />
+  <meta property="og:image:alt" content="Carter welcomes you to Taipei over a night skyline hero image." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Carter's Taipei Guide" />
+  <meta
+    name="twitter:description"
+    content="ni hao Emily, Tim, Allison, & Andrea! here's a guide on where to eat, drink, party, and places to see in Taipei."
+  />
+  <meta name="twitter:image" content="/assets/share-preview.png" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -23,6 +45,7 @@
       --shadow-hover: 0 8px 28px rgba(0,0,0,0.12);
       --radius: 12px;
       --tab-h: 60px;
+      --focus-ring: 0 0 0 3px rgba(32, 172, 143, 0.22);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,8 +55,25 @@
     body {
       font-family: 'Inter', sans-serif;
       background: var(--bg);
+      background-image:
+        radial-gradient(circle at top left, rgba(255, 173, 87, 0.14), transparent 26%),
+        radial-gradient(circle at top right, rgba(52, 152, 219, 0.12), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.18), transparent 22%);
       color: var(--text);
       min-height: 100vh;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: none;
+      box-shadow: var(--focus-ring);
     }
 
     /* ── HERO ── */
@@ -79,6 +119,7 @@
     .hero-content {
       position: relative;
       z-index: 2;
+      max-width: 880px;
       padding: 0 24px;
       animation: heroFadeIn 1.2s ease-out both;
     }
@@ -109,43 +150,14 @@
       75%       { transform: rotate(-10deg); }
     }
 
-    .hero-stats {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-bottom: 32px;
-    }
-
-    .hero-stat {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: rgba(255,255,255,0.14);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 12px;
-      padding: 12px 18px;
-      min-width: 90px;
-      cursor: pointer;
-      transition: background 0.18s, transform 0.18s;
-    }
-
-    .hero-stat:hover {
-      background: rgba(255,255,255,0.24);
-      transform: translateY(-2px);
-    }
-
-    .stat-label {
-      font-family: 'Poppins', sans-serif;
-      font-size: 10px;
-      font-weight: 600;
-      color: rgba(255,255,255,0.75);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      text-align: center;
-      line-height: 1;
+    .hero-subtitle {
+      max-width: 680px;
+      margin: 0 auto 36px;
+      color: rgba(255,255,255,0.86);
+      font-size: clamp(15px, 2vw, 19px);
+      line-height: 1.65;
+      text-wrap: balance;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.26);
     }
 
     .hero-cta {
@@ -178,6 +190,8 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
+      border: none;
+      background: transparent;
       color: rgba(255,255,255,0.7);
       display: flex;
       flex-direction: column;
@@ -189,6 +203,11 @@
       text-transform: uppercase;
       animation: bounce 2.5s ease-in-out infinite;
       cursor: pointer;
+    }
+
+    .scroll-arrow:focus-visible {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.26);
+      border-radius: 16px;
     }
 
     @keyframes bounce {
@@ -406,10 +425,19 @@
     }
 
     .card-img {
+      position: relative;
       height: 175px;
       background: linear-gradient(135deg, #ede8e2 0%, #ddd8d0 100%);
       overflow: hidden;
       flex-shrink: 0;
+    }
+
+    .card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 0%, transparent 52%, rgba(7, 11, 24, 0.18) 100%);
+      pointer-events: none;
     }
 
     .card-img img {
@@ -417,6 +445,8 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      transform: scale(1.01);
+      transition: transform 0.45s ease, filter 0.45s ease;
     }
 
     /* ── CARDS ── */
@@ -429,6 +459,22 @@
     .section-header {
       margin-bottom: 24px;
       animation: fadeSlideIn 0.4s ease-out both;
+    }
+
+    .section-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      padding: 7px 12px;
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     .section-title {
@@ -498,6 +544,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
       transition: transform 0.25s, box-shadow 0.25s;
       cursor: default;
       animation: fadeSlideIn 0.4s ease-out both;
@@ -510,6 +557,12 @@
 
     .card-top {
       height: 4px;
+      background: linear-gradient(90deg, var(--card-accent, rgba(0,0,0,0.08)), color-mix(in srgb, var(--card-accent, rgba(0,0,0,0.08)) 58%, white));
+    }
+
+    .card:hover .card-img img {
+      transform: scale(1.06);
+      filter: saturate(1.04);
     }
 
     .card-body {
@@ -608,6 +661,13 @@
       color: #fff;
     }
 
+    #cards-section,
+    #guide,
+    #cards-grid,
+    #cards-section .section-header {
+      scroll-margin-top: calc(var(--tab-h) + 24px);
+    }
+
     .filter-group-header {
       grid-column: 1 / -1;
       font-family: 'Poppins', sans-serif;
@@ -627,10 +687,11 @@
     body.dark {
       --bg:          #0d0d14;
       --text:        #e8e8f2;
-      --text-muted:  #7878a0;
+      --text-muted:  #a4a3bf;
       --card-bg:     #17171f;
       --shadow:      0 2px 12px rgba(0,0,0,0.5);
       --shadow-hover: 0 8px 28px rgba(0,0,0,0.7);
+      --focus-ring:  0 0 0 3px rgba(91, 215, 191, 0.24);
     }
 
     body.dark #tabs-wrap {
@@ -664,8 +725,17 @@
       border-bottom-color: rgba(255,255,255,0.08);
     }
 
+    body.dark .section-meta {
+      border-color: rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+
     body.dark .card-img {
       background: linear-gradient(135deg, #1c1c28 0%, #14141e 100%);
+    }
+
+    body.dark .card {
+      border-color: rgba(255,255,255,0.06);
     }
 
     body.dark footer {
@@ -707,6 +777,33 @@
       z-index: 1;
       pointer-events: none;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+
+      #hero-bg,
+      .hero-content,
+      .hero-title .flag,
+      .scroll-arrow,
+      .card,
+      .section-header {
+        animation: none !important;
+      }
+
+      #tap-hint,
+      #fireworks {
+        display: none;
+      }
+    }
   </style>
 </head>
 <body>
@@ -721,25 +818,22 @@
     <h1 class="hero-title">
       Carter welcomes you<br>to Taipei! <span class="flag">🇹🇼</span>
     </h1>
-    <div class="hero-stats">
-      <div class="hero-stat" data-filter="famous"><span class="stat-label">Iconic</span></div>
-      <div class="hero-stat" data-filter="must"><span class="stat-label">Must Try</span></div>
-      <div class="hero-stat" data-filter="carter"><span class="stat-label">Carter's List</span></div>
-      <div class="hero-stat" data-filter="group"><span class="stat-label">Your Spreadsheet</span></div>
-    </div>
-    <button class="hero-cta" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
-      Explore the guide ↓
+    <p class="hero-subtitle">
+      ni hao Emily, Tim, Allison, & Andrea! here's a guide on where to eat, drink, party, and places to see.
+    </p>
+    <button class="hero-cta" type="button" onclick="scrollToGuide()">
+      Explore the guide
     </button>
   </div>
 
-  <p id="tap-hint">🎆 tap for fireworks</p>
+  <p id="tap-hint">tap skyline for fireworks</p>
 
-  <div class="scroll-arrow" onclick="document.getElementById('guide').scrollIntoView({behavior:'smooth'})">
+  <button class="scroll-arrow" type="button" onclick="scrollToGuide()" aria-label="Scroll to the guide">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="6 9 12 15 18 9"/>
     </svg>
     <span>scroll</span>
-  </div>
+  </button>
 </section>
 
 <!-- ── GUIDE ── -->
@@ -772,6 +866,7 @@
 
   <div id="cards-section">
     <div class="section-header">
+      <div class="section-meta" id="section-meta">0 spots</div>
       <h2 class="section-title" id="section-title"></h2>
       <p class="section-desc" id="section-desc"></p>
     </div>
@@ -802,11 +897,8 @@
   };
 
   const TAGS = {
-    must:     { label: 'Must Try',     color: '#E8453C' },
-    famous:   { label: 'Iconic',       color: '#2980B9' },
+    famous:   { label: 'Popular Places', color: '#2980B9' },
     carter:   { label: "Carter's List", color: '#16A085' },
-    friend:   { label: 'Friend Rec',   color: '#8E44AD' },
-    hidden:   { label: 'Hidden Gem',   color: '#D68910' },
     touristy: { label: 'Tourist Spot',  color: '#808B96' },
     group:    { label: 'Your Spreadsheet', color: '#E67E22' },
   };
@@ -859,7 +951,6 @@
     { cat: 'eats', rating: 4.0, emoji: '🍢', name: 'A-Zong Oyster Noodles', mapsQuery: '阿宗麵線 台北', hood: 'Ximending', tags: ['famous','touristy'], desc: "One of Taipei's most iconic street food spots. Thick oyster noodles eaten standing in the alley. A Ximending tradition." },
     { cat: 'eats', rating: 4.0, emoji: '🍜', name: "Liu Mama's Cold Noodles", mapsQuery: '劉媽媽涼麵 台北', hood: "Da'an", tags: ['carter'], desc: "Mom's cold noodles — no-frills local spot done right. The kind of place that's been there forever and never needs to change." },
     { cat: 'eats', rating: 4.0, emoji: '🍳', name: 'Da Wang Taiwanese Breakfast', mapsQuery: '大王漢寶殿 台北', hood: 'Zhongshan', tags: ['carter'], desc: 'A classic Taiwanese breakfast shop. Breakfast sandwiches, soy milk, and scallion pancakes — the real local morning ritual.' },
-    { cat: 'eats', rating: 3.9, emoji: '🍝', name: "Liu's Cold Sesame Noodles", mapsQuery: '柳家涼麵 台北', hood: 'Zhongshan', tags: ['carter'], desc: 'Cold sesame noodles — a Taipei summer essential. Simple, cheap, and deeply satisfying.' },
     { cat: 'eats', rating: 4.6, emoji: '🫕', name: "Wang's Broth", mapsQuery: "Wang's Broth Taipei", hood: 'Wanhua', tags: ['group'], desc: 'Michelin Bib Gourmand. A humble stall in Huaxi Street serving deeply flavorful Taiwanese braised pork rice and slow-cooked broth. The real deal.' },
     { cat: 'eats', rating: 4.4, emoji: '🪿', name: 'A Cheng Goose', hood: 'Zhongshan', tags: ['group'], desc: 'A Taipei institution for goose meat — sliced cold with ginger and sesame oil. A distinctly Taiwanese dish that locals swear by.' },
     { cat: 'eats', rating: 4.6, emoji: '🌮', name: 'Taqueria Pang', hood: "Da'an", tags: ['must','group'], desc: 'Michelin-recognized tacos in Taipei. Corn tortillas, bold fillings, and chef-level technique. Better than most tacos in the US. Reserve if you can.' },
@@ -938,6 +1029,7 @@
     { cat: 'attractions', rating: 4.6, emoji: '🌳', name: "Da'an Forest Park", mapsQuery: '大安森林公園 台北', hood: "Da'an", tags: ['famous','group'], desc: "Taipei's Central Park. Wide paths, a small lake, and tons of locals jogging or relaxing. Great for an early morning walk." },
     { cat: 'attractions', rating: 4.6, emoji: '🪔', name: 'Longshan Temple', mapsQuery: '龍山寺 台北', hood: 'Wanhua', tags: ['must','famous'], desc: "Taipei's oldest and most atmospheric temple. Clouds of incense, devoted worshippers, and stunning traditional architecture." },
     { cat: 'attractions', rating: 4.6, emoji: '🏺', name: 'National Palace Museum', mapsQuery: '國立故宮博物院 台北', hood: 'Shilin', tags: ['famous','touristy','group'], desc: "Holds one of the world's largest collections of Chinese imperial art and artifacts. The jade cabbage alone is worth the trip." },
+    { cat: 'attractions', rating: 4.4, emoji: '🔬', name: 'TSMC Museum of Innovation', mapsQuery: 'TSMC Museum of Innovation Hsinchu', hood: 'Hsinchu', tags: ['group'], desc: "Not in Taipei proper, but worth the detour if you're into tech, design, or Taiwan's semiconductor story. Interactive, polished, and surprisingly approachable." },
     { cat: 'attractions', rating: 4.6, emoji: '🎨', name: 'Taipei Fine Arts Museum', mapsQuery: '台北市立美術館', hood: 'Zhongshan', tags: [], desc: "One of Asia's premier contemporary art museums. Rotating exhibitions, beautiful brutalist architecture, and free on Saturdays." },
     { cat: 'attractions', rating: 4.6, emoji: '⛰️', name: 'Jinmianshan Trail', mapsQuery: '金面山步道 台北', hood: 'Neihu', tags: ['hidden','carter'], desc: 'A lesser-known hike with incredible 360° views of Taipei. Less crowded than Elephant Mountain, just as spectacular.' },
     { cat: 'attractions', rating: 4.6, emoji: '🏞️', name: 'New Taipei Metropolitan Park', mapsQuery: '新北大都會公園', hood: 'New Taipei', tags: [], desc: 'A huge metropolitan park just outside Taipei in New Taipei City. Great for a half-day escape — wide open space and fresh air.' },
@@ -993,6 +1085,20 @@
     const info = HOOD_LINE[hood];
     if (!info) return '';
     return `<span class="mrt-badge" style="background:${info.color}">${info.stop}</span>`;
+  }
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  function smoothBehavior() {
+    return prefersReducedMotion.matches ? 'auto' : 'smooth';
+  }
+
+  function scrollToGuide() {
+    document.getElementById('guide').scrollIntoView({ behavior: smoothBehavior() });
+  }
+
+  function getCountLabel(count) {
+    return `${count} ${count === 1 ? 'spot' : 'spots'}`;
   }
 
   const IMGS = {
@@ -1061,7 +1167,7 @@
     'Da Shixiong Noodles':'noodles',"UMAMI Le Blé d'Or":'craft_beer','Hangzhou Soup Dumplings':'dumplings',
     'Husband & Wife Spicy Hot Pot':'hotpot','El Sabroso Mexican Food':'tacos',
     'A-Zong Oyster Noodles':'street_food',"Liu Mama's Cold Noodles":'noodles',
-    'Da Wang Taiwanese Breakfast':'breakfast',"Liu's Cold Sesame Noodles":'noodles',
+    'Da Wang Taiwanese Breakfast':'breakfast',
     "Wang's Broth":'street_food','A Cheng Goose':'fine_dining','Taqueria Pang':'tacos',
     'Tian Jin Onion Pancake':'street_food',
     'KONZY KAVA':'bar','Chinguo Cafe':'cafe','Weight Books':'bookstore','Sky Cofi':'coffee',
@@ -1085,7 +1191,7 @@
     'Elephant Mountain':'hike','Chiang Kai-shek Memorial':'temple',
     'Dajia Riverside Sunflower Garden':'flower_market',"Da'an Forest Park":'park',
     'Longshan Temple':'temple','National Palace Museum':'museum',
-    'Taipei Fine Arts Museum':'art_museum','Jinmianshan Trail':'hike',
+    'TSMC Museum of Innovation':'museum','Taipei Fine Arts Museum':'art_museum','Jinmianshan Trail':'hike',
     'New Taipei Metropolitan Park':'park','Wazikeng Playground':'park',
     'Taipei 101':'taipei_101','Jianguo Weekend Flower Market':'flower_market',
     'Dajia Riverside Park':'riverside','Fuzhou Mountain Park':'hike',
@@ -1108,11 +1214,41 @@
     'Yiqi Yakitori':              'https://shop.yakitori.com.tw/wp-content/uploads/2023/11/DSC04905-Resized.jpg',
     'Yoshikawa Seafood Bowl':     'https://nowhot01.com/wp-content/uploads/2025/01/yoshikawa-seafood-don02.webp',
     'Lava Spicy Hot Pot':         'https://taitai.com.tw/wp-content/uploads/2023/08/batch_collage.jpg',
+    'Curry Lab. Tokyo':           'https://imgproxy.poponote.app/1/auto/315/0/sm/0/aHR0cHM6Ly9hc3NldHMucG9wb25vdGUuYXBwL25vdGUvNjE1OTJjODY5M2U3ZWI1YzY0OTUyOTgzL21lZGlhLzYxNTkyYzg2OTNlN2ViNTQwMDk1Mjk4NQ==',
+    'Xiao Da Oyster Noodles':     'https://lh5.googleusercontent.com/p/AF1QipO2w74lyb2bHCUmgYuNoYK-7UuipTRbi_fzhSUY=s1024',
+    'Gou Yixia Izakaya':          'https://lh5.googleusercontent.com/p/AF1QipM6TMaQitBbEC6NylAvrLkRW0MOYoIxhtl4HwP9=s1024',
+    'Chuang Sushi & Donburi':     'https://lh5.googleusercontent.com/p/AF1QipM68xUjXG5h09SVOcdK4qAIYw9J6leSd1iwOS7Q=s1024',
     'Din Tai Fung':               'https://thecitylane.com/wp-content/uploads/2016/10/Xiao-Long-Bao.jpg',
+    'HOOTERS Xinyi':              'https://www.hooters.com.tw/wp-content/uploads/3.%E4%BF%A1%E7%BE%A9%E5%BA%97.jpg',
+    'Shaojiu Korean BBQ':         'https://lh5.googleusercontent.com/p/AF1QipP4mJgud482azD5y8q7SGiDoOky8sxL5ZAOc0E5=s1024',
+    'Aibon Steak Bistro':         'https://lh3.googleusercontent.com/pPdiWFF1Ska8W1PURFk1UrsTXNyDfmoTODBs0aKd0sChdm7_WIl3QbO_HchycpKow7ykoYoLuXLwc_iTbn8VHxpw=s300-c',
+    'Yu Sushi Lishui':            'https://lh3.googleusercontent.com/vVeLWC6HJqF-rpC9O_FsxtME5oC5rLDAFcmQHAeAjSobtv4pf0vp-6l79gvHx2uPK9Fbmlff3HWIKDz_S4EAyOcPuCtP8iBnZ5pS=s300-c',
+    'Wen Curry':                  'https://lh5.googleusercontent.com/p/AF1QipOirm7UDhU-GtuTrPXTJC6jny_TosB__H1Ccppk=s1024',
+    'Huiguo Hot Pot':             'https://lh5.googleusercontent.com/p/AF1QipOlYJExplkvIGYPnKIMkUFZs3if_Oj9PCj9Ate6',
+    'Ossu Handroll & Bar':        'https://cdn.corner.inc/place-photo/AcJnMuHQLfD9ABugLjh1JhIlt3K3K4JHJOnKYcMaz69qS1DBU4nw5kIToNrmMMbL3dWBTQjrfOhRgP2VuAKBCf-iPRUYEsiE17rKCRI46f9XIleKu8_YxBcjb7z6U-81zGgXFXb66m7yvZ19orQLNlIalwgqmwMAOx_WvL-viXezBRskzmjG.jpeg',
+    'Hotties Fried Chicken':      'https://lh5.googleusercontent.com/p/AF1QipM-ZquwHVmuYsVojXqOGkwdEXFGSRmTkscfCGH-',
+    'EOI Fine Dining':            'https://uc.udn.com.tw/photo/t3/2026/03/30/34810339.jpg',
+    'Asashi Sushi':               'https://mamahuhu.blog/wp-content/uploads/2021/06/S__44351512-scaled.jpg',
+    'Sushi Ichita':               'https://cdn.corner.inc/place-photo/ATplDJZfdz-BCPaKT1gfWTk-StYVUF0UGwyP1XXmrbAca0OS9n38Nncx0jRxs-re27Tqmsk54pTVUfhCd0KAwCjJqQFcEdlbwHx1WkCV8Yp2otkw8OywHBssc8NpKEm9ISA9-dHso4NwVOh9N14QLf_FRShbhI-Rlr3BGtPntKjfka04TvXr.jpeg',
+    'Zhanan Bistro':              'https://itin-dev.wanderlogstatic.com/freeImageMedium/x5PEgUsLeN4YR3dcsaFHUu7qk39QXglE',
+    'Gubei Fine Dining':          'https://lh3.googleusercontent.com/pZ-6DIWreGCeZMg_T2hHHHhv4x4OZkii809lYocdFoMNXr6_e7oKu6J16-4Sq8NSUC4ObFeVDTK6-I4AYGYb_f3xPB6rpShyzA=s300-c',
+    'Caoshan Night View Restaurant': 'https://lh5.googleusercontent.com/p/AF1QipNhEjlFHIb1660BIH3mocGCV0gBI_5HFEgC_n2B=s1024',
+    'Jiajian Shabu Shabu':        'https://lh3.ggpht.com/p/AF1QipPUky6hLl-CQN7NMFuNfFp6KsWqlwaI9OW3irup=s512',
+    'Shinshinian Omakase':        'https://lh5.googleusercontent.com/p/AF1QipMsheHQQtUeRKXTjkkUy7I2Qfq-Qdg1YUCZHLPq=s1024',
+    'Weekend Fried Chicken Club': 'https://static.wixstatic.com/media/e18d71_9eb4edcdf655427cbb16fa8533d23798~mv2.jpg',
+    'Torisoba Take':              'https://ramenjapanguide.com/wp-content/uploads/2025/11/img_0613-e1763123903455.jpg',
     'Fu Hang Soy Milk':           'https://thumbs.dreamstime.com/b/fu-hang-soy-milk-dou-jiang-famous-traditional-breakfast-restaurant-taiwan-huashan-market-building-people-get-long-line-up-145290541.jpg',
     'RAW':                        'https://f7e5m2b4.delivery.rocketcdn.me/wp-content/uploads/2015/09/Raw-Taipei-designed-by-Weijenberg-for-Chef-André-Chiang-14.jpg',
     'Addiction Aquatic Development': 'https://www.isp.tw/wp-content/uploads/2025/04/Addiction-Aquatic-Development5.jpg',
     'Yong Kang Beef Noodle':      'https://platform.eater.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/10766443/yongkang-beefnoodlesoup_26320251560_o.0.0.0.jpg',
+    'Douhua Zhuang':              'https://lh5.googleusercontent.com/p/AF1QipMCwdCCGBRBL9JRBxcjdvU1sYqQLOl6mSHbFoIs=s1024',
+    'BEPPIN PASTA':               'https://lh3.googleusercontent.com/p/AF1QipM-bcUJpvtLAkSWpqMsOki5d-ZA3xeAeHSysWGm=s512',
+    'Da Shixiong Noodles':        'https://globalfoodelicious.com/wp-content/uploads/20171001144100_73.jpg',
+    "UMAMI Le Blé d'Or":          'https://lh3.googleusercontent.com/OQoEAnT7viy0Xfb-OMZy5WYlks9_exZBpQOw2MiSzvkGHKDig8S1tJwaLOyaqqLfuQXwunTd5o2hVoBqcl_s9A=s300-c',
+    'Hangzhou Soup Dumplings':    'https://lh5.googleusercontent.com/p/AF1QipOg55lX3MRXo1McBpy4qqAvYRJ86ngkWX5WSqW_=s1024',
+    'Husband & Wife Spicy Hot Pot': 'https://lh3.googleusercontent.com/2Qg8Ma3AcnBaAMZchlHe6J-5-sYaNMYp5Ff0JMw748r9ileiylu4_lvR9Zs2Y-3AJgYE9P-Ck7IX3T0d-2B_pIo=s300-c',
+    'El Sabroso Mexican Food':    'https://lh5.googleusercontent.com/p/AF1QipNOY95KwMldcxbFzpYrmFi-aZyO7pXPAD4qQKu-',
+    'Da Wang Taiwanese Breakfast': 'https://lh5.googleusercontent.com/p/AF1QipMHQqeh6j3KEY281QgxaeWCc7YrjIdP1m-dYGXQ=s1024',
     'Tian Jin Onion Pancake':     'https://www.taipeitravelgeek.com/wp-content/uploads/2019/06/Tian-Jin-Onion-Pancake-4.jpg',
     'Taqueria Pang':              'https://axwwgrkdco.cloudimg.io/v7/__gmpics__/71c09c9aa09e419c894582add995c7fc',
     "Wang's Broth":               'https://www.elgintan.com/wp-content/uploads/2025/06/Wangs-Broth-Braised-Pork-Rice-Taipei.jpg',
@@ -1120,24 +1256,42 @@
     'Chale Tacos':                'https://gzifood.com/wp-content/uploads/2024/06/IMG_8541.jpg',
     'Crispy Stinky Tofu':         'https://taiwantorism.com/wp-content/uploads/2022/08/IMG20220814140230-1-scaled.jpg',
     'A-Zong Oyster Noodles':      'https://img.fun-life.com.tw/taipei/azong-noodles/IMG_3197.jpg',
+    "Liu Mama's Cold Noodles":    'https://lh3.googleusercontent.com/zjOReCTfTntazcpB792KqW8cA_65feJb9BnH-xN9nuGa68rhYDTdRunbWEStLPCj6qUzyqzVbxLXwGekHP2f=s300-c',
     'Taihu Craft Beer Taproom':   'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh2uNbMDjzrfnZ1VdoYDt7MJ6IogFB0AbKHRFaQfO0nZOUY3Qv3aiKmb7brDXKvHelTG-emNzMaRclm-JEj4b-KJ80MHFi26G95FHVX0dwQabfagZepOb9eGO1zkoyKNVvtLxvs3WMfvE3M/s1600/IMG_7321.JPG',
     'Shiyuan Salt & Pepper Chicken': 'https://kuolife.com/wp-content/uploads/2020/05/%E5%B8%AB%E5%9C%92%E9%B9%B9%E9%85%A5%E9%9B%9E_200525_0035.jpg',
 
     // ── CAFES ──
     'KONZY KAVA':                 'https://lexie.tw/wp-content/uploads/2022/06/1200630-01-5.jpg',
+    'Chinguo Cafe':               'https://lh3.googleusercontent.com/Db4itla8Okd694prnfKdPsLn0OnTV0tWGt6Q2yg2o-NpTFH_dynBaelXwCkSUSxcJotCPtiWgHV9A7hlDR75zmce5Gikx-HsN3U=s300-c',
+    'Sky Cofi':                   'https://lh5.googleusercontent.com/p/AF1QipMIkL5RQ7ZzHUGVpoEWa0NU-NDOBr7wTiDk3_cF=s1024',
+    'CURISTA COFFEE':             'https://lh5.googleusercontent.com/p/AF1QipPwyYi9TqzbQI6M5JdbrFBTgGcIz3OWlFxgwKUP=s1024',
     'Weight Books':               'https://i0.wp.com/coffeeshop-library.com/wp-content/uploads/2023/02/%E5%8F%B0%E5%8C%97%E5%92%96%E5%95%A1%E5%BB%B3-%E9%87%8D%E6%9C%AC%E6%9B%B8%E5%BA%97-by-coffeeshop-library-5.jpg?resize=731%2C548&ssl=1',
     'Simple Kaffa Xinyi':         'https://oo-foodielicious.com/wp-content/uploads/2024/04/Simple-Kaffa-Taipei-Cafe-Review-2.jpg',
+    'basis coffee.':              'https://lh5.googleusercontent.com/p/AF1QipOMw4AM7fxavTkfqKK3lrwWd5KBcLzEa393h09-=s1024',
+    'Hua Zhai Cafe':              'https://angelababy0822.com/wp-content/uploads/2024/12/DSC03194.jpg',
+    'Cafe Showroom':              'https://retaildesignblog.net/wp-content/uploads/2014/01/Cafe-Showroom-by-MW-Design-Taipei-Taiwan-720x480.jpg',
+    'TWATUTIAN Coffee & Co.':     'https://lh3.googleusercontent.com/0j9-cNfHn3KO2T_h1vSorVxlAw0x7nt9YfbkqOVfwVPJwFbnoPMcnokcWv1LEdtq-nz66rWriVGitsLovRZwoOxfc5TyNEi8lXYb=s300-c',
+    'VWI by CHADWANG':            'https://lh3.googleusercontent.com/wOfQXnbUWS92DcgRRkpm_GmlxOGjdW_vLnJa3fH5vcHMa4GsLOplkbAEMqdxIgfpBbPPuaX28foeifPBC6wwiE7qovQ_e__CvQ=s300-c',
     'Rufous Coffee':              'https://coffeeforbeginners.com/wp-content/uploads/Taiwan/Rufous/feat_rufous.jpg',
     'Sunsun Museum Cafe':         'https://keedan.com/track/files/2022/04/taipei-sunsun-museum-coffee-select-shop-1250135.jpg',
     'Fong Da Coffee':             'https://www.aspirantsg.com/wp-content/uploads/2013/08/20130808-195142.jpg',
     'Beckhome Roasting House':    'https://sydneyui.com/wp-content/uploads/2025/02/beckhome-roasting-house.jpg',
+    'Odd One Out':                'https://cdn.corner.inc/place-photo/AZose0ndn36M9eWUC6ZS9y-Y7KP7dlMYcjC1jrO0xgsRtmf9s7dYX6Y490ozBPVP3Jjr0YU0tIhY0QoUeTvsCzrQs1tsztiS6zZdPiUk1rAb9IrAY8Ox-kfPzQTmK9XuC5PtVOI4D5H6FK2jKsO5sBZncX2KF02--P0cE0gUzgL_UYj5lXVt.jpeg',
+    'URBAN Research':             'https://cdn.corner.inc/place-photo/AVzFdblf_rXLcpAe4tAYA8Qc2sPlfKRZbYJJ_a61uJdFV_h9L0-tFQX5bonrvQ-XMfbflNzKUauSoGNMTaXo0iJ6H8nDVFYPU7IZ0_QuC-8DYvsENG86gCSRKWUkVc4uKfiowvKlHNT4EU4Erkn6GUsQhxYXLXE9HOPNatbSqBY2GCzUTx1E.jpeg',
+    'Ruins Coffee Roasters':      'https://lh5.googleusercontent.com/p/AF1QipNTOTAa8zaya30kVIZWxNkLznCI6BPHFk7Zdogc=w600-h800',
+    'Miracle Coffee':             'https://lh5.googleusercontent.com/p/AF1QipMWSj38zAcU6lPWO55I2RVNQVhS5PexbK9zY28K=s1024',
+    'Ueshima Coffee':             'https://cdn.rtaiwanr.com/uploads/images/cover_image/10455/Ueshima_Coffee_Lounge________-009.jpg',
+    'FOMO Coffee':                'https://itin-dev.wanderlogstatic.com/freeImageMedium/Ioo04xerHb2VcdKCyaUacBFxAlP7wkYd',
 
     // ── BOBA ──
     'Xing Fu Tang':               'https://www.bubbleteaology.com/wp-content/uploads/2020/07/Xing-Fu-Tang-Brown-Sugar-Boba.jpg',
     'Ten Ren Tea':                'https://upload.wikimedia.org/wikipedia/commons/4/44/Gongguan_Store%2C_Ten_Ren%27s_Tea_20201212.jpg',
-    'WooTea':                     'https://upload.wikimedia.org/wikipedia/commons/3/32/Wootea_store_Kaifeng_Street_20230513_184202.jpg',
+    'WooTea':                     'https://cdn.corner.inc/place-photo/ATKogpf9qxQl6WhReQvcOJa13SgQE3cTikrGYQjCQIe3klOYF0vFDTjwvNw3Ickrgx7-yFNrEGjOuND2nRgvfI1hmv8PWzpoZjjBCQaqeIHMzkxqhRrlyWVj2FrsPwNKjCEI7rRV2fZQ-Lib6PK2FubZmBohEgbkz7KjeB1aUKqOtzy9thSLKpGwRrsyqhS9Lb8y02aSNeyPbP7vyx8GVF4vGrGWvO-KK6VlNa1JYnF5LCoosos-Fiifm4lMJG0AZ_cZLuOKdk20hI7vPRTcnrUZKZTUddhhURBP156Qdwb0pIAkVCic_g5wcIqN3vyWxF_YoN2dTXUhuE4oZVHv36Xi0O3xhtFFQxym5jLsl5Jon-Q8ny1_F2FztzjZ0FHIYOwYAuSh9ET4y-wYpJGpbtkusVdYqSIE6ceFYTWMxj0lgnKWKlbx_dluf3hC8AkpVGis.jpeg',
     '50lan':                      'https://upload.wikimedia.org/wikipedia/commons/f/ff/50_Lan_Xindong_Store_%2853108156792%29.jpg',
     'LePhare':                    'https://aliceeat.com/wp-content/uploads/20230728134040_67.jpg',
+    'Guiji':                      'https://www.artreehotel.com.tw/upload/spot_list_pic/20240913174039-16b7cf07__25G236K6dW.jpg',
+    'Nap Tea':                    'https://cdn.corner.inc/place-photo/ATplDJZzXSbdfeV1jjU7vIoCZU11NAaLsWMEGr6RCq3TQplpFesSn-98dnM-gt0yVL3TRVgAKj9XmgY2GBwkiRVTv2N5yeZqnw0b5UL06C9PfZuFZbTxdcdbKsh_K32dO_lPU2mPDgJGhZaONbc4iKAkaX2dWrrZQCCw7A-jA_9JcevlHIV7.jpeg',
+    'Oolong Tea Project':         'https://cdn.corner.inc/place-photo/AWn5SU5hbtagRxDlzNg7ER19w2udb2dBU9GkKpuHgGW4s2wodvB8kt0jbH6aG8AM5X3ip-AEbijm8QIHyYwLua9PUcHwNnrjj7sFBhS3_Pe5vCkJih_l4W19N03IQsJ5M1IPFY7Khjt2IBx2_V_IbKjir81DbwsCWn0CNsQlT-mB8tuWZ9dc3eErCC0WjmeJm60w0peEplUK0AFoR8l0Bnk17okRfNHN-g_WfC49rWWuguDN_c4OF7b42CEKrPhUZH318OT25yixaydOU_7ftq5_Lzgf9yE3K5cYUPDrrdRIEmwjXFWuzwt3g8GZ91CWSuRWZWrMatAWHO63rgizZFzqNgvIQ4-UypK5vX0CgF0-mFbzEMHea_e6WZtX-XvYLj8MPu7gKOH36TNx77xsKP4AP9e5KiDFuBDLBqVRJs5Jy0l8p0BsRtCmKKHnFbwY0DXo.jpeg',
 
     // ── BARS ──
     'Book ing':                   'https://www.jumpman.tw/wp-content/uploads/2022/07/20220707-DSC08621.jpg',
@@ -1150,19 +1304,24 @@
     'WA-SHU':                     'https://sosense.tw/wp-content/uploads/20190509151543_52.jpg',
     'BANKER Martini Bar':         'https://resizer.otstatic.com/v2/photos/large/1/87882835.jpg',
     'Sappho Live Jazz':           'https://www.taipeitravelgeek.com/wp-content/uploads/2019/07/Sappho-Live-Jazz-5-1024x703.jpg',
+    'Marco Polo Lounge':          'https://tpe.fareasternhotel.com.tw/upload/marcopololounge_base_list/twL_marcopololounge_base_25L01_dgK6AZQ8Eq.JPG',
+    'Bar Root by -1':             'https://itin-dev.wanderlogstatic.com/freeImageMedium/kiJikO8tzFLIcgRYU8Ay4aMtRlDakXsI',
+    'Wonder Bar':                 'https://cdn.corner.inc/place-photo/AWn5SU7baTTf7hMDWbc08pGcBRAU49usXr4ss3x5-0EVURZcQuicdYBMh4IEP6dOxOvRarXt5g4tbMmLRvVW-APn4ygG9vgZe3CECjPFgHQtjGlG_ICFeY4PAr9VHDLYx0sg-K8e9FXOgBaGQzx5juHrWVtzrSf0OzBW-Tr-6AlT8aT7CRCQKy1lHsbbXp8d5IVpkVzVNLLTWvxclkQSLY2wLiViz9gjurpNsog3Q4qKAYCRvBcfUdLY_5n-EJvQ72mJEeo6hsE5ojsdERZlGS-WpXukkJY2dBBqoF0rM_8PhyW83-RBnwydQZ6bvoCGUWIBtpJiCI_MFzEIh2GQqaPMGD5qPaTU2Fb2KFKu6VBtGp9fM7fPYJdRCFb90l3j0yVATHgVZq1chSQsXPT5S6bKLT5UNYA4dana9xdUSHH2F6i-Eg.jpeg',
     'Fake Sober':                 'https://i1.wp.com/popbee.com/image/2023/04/fake-sober-coffee-bar-taipei-xinyi-taiwan-04.jpg?quality=95',
     'Sleep No More':              'https://beri.tw/wp-content/uploads/2025/06/sleepnomore-07.jpg',
 
     // ── CLUBS ──
-    'DD':                         'https://e6c4d184a0.clvaw-cdnwnd.com/07b86dd616e9a5883727782c740ed33a/200000456-3386333865/700/1000013305.jpeg?ph=e6c4d184a0',
-    'Wave':                       'https://e6c4d184a0.clvaw-cdnwnd.com/07b86dd616e9a5883727782c740ed33a/200000446-cbdebcbdee/1000012653.jpeg?ph=e6c4d184a0',
+    'DD':                         'https://club-craft.com/sources/images/places/019d253b-9bd8-73b4-b758-d96f6f838d0d/903bb02b-baf5-41ee-a566-ea3bd84415e2.jpg',
+    'AI':                         'https://cdn.corner.inc/place-photo/ATKogpeiwnsh-iyp_wkoG01shsS0fIvkvwTHH1iGvBC9rlOAWe19Pd1Cex8hsUvOsR01o_YFzFY6DiURgxFAqAWYEuAcLjjV2tyGdOEppRSiSTo4-LgaTdRRV57ggSs9EFhnAcqSj9ovw_lKYVarw7b6MXPyuFl7JO2t0WyKhFQnc0lSx_OwgFcr4CXaRclYinYB9DhlwM67iTQqcm7JWu9-TeUS0rLykf0VqFGxnDI8N0_axgrvqklo84KgmqtCDkHEBReCsMoGrHL2L0TSTi91R5I8IA6WDoI5xnLkPUu9HoWlb3oSqrAVS6_kmDVGfUo5UONK-Z4qg0g.jpeg',
+    'Wave':                       'https://cdn.corner.inc/place-photo/ATJ83zh-iteqwxCcTOk3VGBMQcjQ7mlx6siAeSJVlCCTi6PnkX2RnGpbRrU5eu6-sdQ2vj-KQFqC5Uafhf-SvlgoeRbwT3-L2A_sr6na7lWThE-Rkxmq23wl5RAJuniUFvH2CpG4JzXZamK3Ynvx56YR-pP3XMhmUxqMw_dBLbnLPR9nbmEb.jpeg',
     'Barcode':                    'https://www.att4fun.com.tw/files/index/NightClub.jpg',
-    'Kor':                        'https://kor-asia.com/wp-content/uploads/2019/10/18814787_541026896286682_7457486638825516045_o.jpg',
+    'Kor':                        'https://cdn.corner.inc/place-photo/AWU5eFiSc13It7I9sRAuInDIfho1diComiMncw04ZOpMPIelDSYhA10Sv77LUBwOME9S9J5sGEEL711s7I8OVl91alv3ONWXKw5Tth1IvDwlBtyeQQ_hSROgRkJm2xxXGbms0OFp34DCmE_XA5OBIGscmK21v4XFauc9ShNrUfQFalx6lUB-.jpeg',
+    'RUFF Night Club':            'https://cdn.corner.inc/place-photo/AUacShiVCFOuTnDchvo1gsq3zcRrDCvKaIddzE6kyKt3xTyJ7J35HCOWqhVzZApuaCVjxLTVmLS6Rk1zuTeD2r0MQg4fHrPBepPmv-S8D5f0ykpel34KBlUomT8TPfenwDWi6D8QpWLqFSUTaTGTsghiQg5yvUC0xwep2iGTuOp9y2lqmDzF.jpeg',
 
     // ── NIGHT MARKETS ──
     'Ningxia Night Market':       'https://upload.wikimedia.org/wikipedia/commons/9/93/Ningxia_Night_Market_20250520.jpg',
     'Raohe Night Market':         'https://upload.wikimedia.org/wikipedia/commons/9/97/East_Entrance_of_Raohe_Street_Night_Market_20060118_night.jpg',
-    'Shilin Night Market':        'https://upload.wikimedia.org/wikipedia/commons/5/52/Shilin_Night_Market_02.jpg',
+    'Shilin Night Market':        'https://www.shilin-night-market.com/images/slide1.jpg',
     'Nanjichang Night Market':    'https://www.travel.taipei/content/images/attractions/293167/1024x768_attractions-image-rkaephvbmuyarwucnw7cla.jpg',
 
     // ── ATTRACTIONS ──
@@ -1172,11 +1331,19 @@
     "Da'an Forest Park":          'https://upload.wikimedia.org/wikipedia/commons/1/14/Daan_Park_20210817.jpg',
     'Longshan Temple':            'https://upload.wikimedia.org/wikipedia/commons/a/a3/Longshan_Temple%2C_Taipei_01.jpg',
     'National Palace Museum':     'https://upload.wikimedia.org/wikipedia/commons/0/02/Taipei_Taiwan_National-Palace-Museum-01.jpg',
+    'TSMC Museum of Innovation':  'https://itin-dev.wanderlogstatic.com/freeImageMedium/au9Cb3Rm8XkiMFtSpMmiqltlDa8XVGzT',
     'Taipei Fine Arts Museum':    'https://upload.wikimedia.org/wikipedia/commons/8/87/Taipei_Fine_Arts_Museum_20240107.jpg',
+    'Jinmianshan Trail':          'https://www.naturetrail.org.tw/images/images/13a2e4cf14037ec888e0b9730bb70ee1.JPG',
+    'New Taipei Metropolitan Park': 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/New_Taipei_Metropolitan_Park_Skyline_20241116.jpg/1280px-New_Taipei_Metropolitan_Park_Skyline_20241116.jpg',
+    'Wazikeng Playground':        'https://images.abic.com.tw/photoDB/post/1696230598.jpg',
     'Taipei 101':                 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Taipei_Taiwan_Taipei-101-Tower-01.jpg',
     'Jianguo Weekend Flower Market': 'https://1.bp.blogspot.com/-rTjHhzEc6Xc/X5bP9Ww-asI/AAAAAAADIs4/U2Hshe8nDKAkgzOfA8CkT3ZHycr58HxLACLcBGAsYHQ/s0/IMG_20201018_160754.jpg',
     'Dajia Riverside Park':       'https://www.sunsetchasingtaiwan.com/wp-content/gallery/dajia-riverside-park/20221113_165752-scaled.jpg',
     'Fuzhou Mountain Park':       'https://www.sunsetchasingtaiwan.com/wp-content/gallery/fuzhoushan/20240204_170059-1-scaled.jpg',
+    'Qingfeng Pavilion':          'https://www.gaiagps.com/api/objects/photo/0a7cae5f848ef4bb84b96f278b8f5d1e/image/full/',
+    'Sunshine Riverside Plaza':   'https://images.abic.com.tw/photoDB/post/1614849489.jpg',
+    'Rongxing Garden Park':       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Bougainvillea_Tunnel_in_Rongxin_Park.jpg/1280px-Bougainvillea_Tunnel_in_Rongxin_Park.jpg',
+    'Zhongshan Park':             'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Sun_Yat-sen_Memorial_Hall_Park.jpg/1280px-Sun_Yat-sen_Memorial_Hall_Park.jpg',
     '228 Peace Memorial Park':    'https://upload.wikimedia.org/wikipedia/commons/7/7d/Taipei_Taiwan_228-Peace-Memorial-Park-02.jpg',
     'National Taiwan Museum':     'https://upload.wikimedia.org/wikipedia/commons/0/02/Taipei_Taiwan_National-Palace-Museum-01.jpg',
     'Taipei Zoo':                 'https://upload.wikimedia.org/wikipedia/commons/4/47/Taipei_Zoo_Entrance.jpg',
@@ -1186,6 +1353,7 @@
     'Ximending':                  'https://upload.wikimedia.org/wikipedia/commons/2/26/Ximending_rainbow_crossing_201910.jpg',
     'Xinyi District':             'https://thumbs.dreamstime.com/b/modern-skyline-xinyi-district-night-taipei-taiwan-xinyi-disctrict-cbd-taipei-lots-modern-skyscrapers-244584210.jpg',
     'Zhongshan':                  'https://thumbs.dreamstime.com/z/taipei-taiwan-may-zhongshan-district-cafe-shopping-street-taipei-taiwan-may-zhongshan-district-cafe-shopping-street-193945722.jpg',
+    'Dongqu (East District)':     'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Taipei_-_East_District_banner.jpg/1280px-Taipei_-_East_District_banner.jpg',
     "Da'an":                      'https://seeanyplaces.com/wp-content/uploads/2023/09/Daan-District-Taipei-City-3.jpg',
     'Beitou':                     'https://www.xbths.taipei/assets/img/about/map_2023/10.jpg',
   };
@@ -1212,9 +1380,11 @@
     const card = document.createElement('div');
     card.className = 'card';
     card.style.animationDelay = `${delay}ms`;
+    card.style.setProperty('--card-accent', CATEGORIES[place.cat].color);
     const imgUrl = getImgUrl(place);
     card.innerHTML = `
-      <div class="card-img">${imgUrl ? `<img src="${imgUrl}" alt="" loading="lazy" onerror="this.remove()">` : ''}</div>
+      <div class="card-top" aria-hidden="true"></div>
+      <div class="card-img">${imgUrl ? `<img src="${imgUrl}" alt="Photo of ${place.name}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}</div>
       <div class="card-body">
         <div class="card-header">
           <span class="card-emoji">${place.emoji}</span>
@@ -1241,6 +1411,7 @@
       b.classList.toggle('active', on);
       b.style.background   = on ? TAGS[b.dataset.tag].color : '';
       b.style.borderColor  = on ? TAGS[b.dataset.tag].color : '';
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
     });
   }
 
@@ -1252,9 +1423,14 @@
     const catData = CATEGORIES[cat];
     document.getElementById('section-title').textContent = catData.label;
     document.getElementById('section-desc').textContent  = catData.desc;
-    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.cat === cat));
-
     const places = PLACES.filter(p => p.cat === cat).sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    document.getElementById('section-meta').textContent = getCountLabel(places.length);
+    document.querySelectorAll('.tab').forEach(t => {
+      const on = t.dataset.cat === cat;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+
     const grid = document.getElementById('cards-grid');
     grid.innerHTML = '';
     places.forEach((p, i) => grid.appendChild(buildCard(p, i * 60)));
@@ -1270,6 +1446,7 @@
     document.getElementById('section-desc').textContent  = `Every spot tagged "${tagDef.label}" across all categories.`;
 
     const matching = PLACES.filter(p => p.tags.includes(tag));
+    document.getElementById('section-meta').textContent = getCountLabel(matching.length);
     const groups = {};
     matching.forEach(p => { if (!groups[p.cat]) groups[p.cat] = []; groups[p.cat].push(p); });
     Object.values(groups).forEach(g => g.sort((a, b) => (b.rating || 0) - (a.rating || 0)));
@@ -1290,14 +1467,7 @@
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
       render(tab.dataset.cat);
-      document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    });
-  });
-
-  document.querySelectorAll('.hero-stat[data-filter]').forEach(el => {
-    el.addEventListener('click', () => {
-      document.getElementById('guide').scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => renderFilter(el.dataset.filter), 500);
+      document.getElementById('cards-section').scrollIntoView({ behavior: smoothBehavior(), block: 'nearest' });
     });
   });
 
@@ -1308,7 +1478,7 @@
         render(activeCategory);
       } else {
         renderFilter(tag);
-        document.getElementById('cards-section').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        document.getElementById('cards-section').scrollIntoView({ behavior: smoothBehavior(), block: 'nearest' });
       }
     });
   });
@@ -1324,6 +1494,7 @@
     document.body.classList.toggle('dark', dark);
     localStorage.setItem('theme', dark ? 'dark' : 'light');
     themeLabel.textContent = dark ? 'Light mode' : 'Dark mode';
+    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
   }
 
   const saved = localStorage.getItem('theme');
@@ -1336,17 +1507,24 @@
 
 <script>
 (function() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
   const canvas = document.getElementById('fireworks');
   const ctx    = canvas.getContext('2d');
   const hero   = document.getElementById('hero');
+  let dpr = window.devicePixelRatio || 1;
   const COLORS = [
     '#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#ff6bff',
     '#ffb347','#c9f0ff','#ff9f7f','#ffffff','#ffe66d',
   ];
 
   function resize() {
-    canvas.width  = hero.offsetWidth;
-    canvas.height = hero.offsetHeight;
+    dpr = window.devicePixelRatio || 1;
+    canvas.width  = Math.round(hero.offsetWidth * dpr);
+    canvas.height = Math.round(hero.offsetHeight * dpr);
+    canvas.style.width = `${hero.offsetWidth}px`;
+    canvas.style.height = `${hero.offsetHeight}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize();
   window.addEventListener('resize', resize);
@@ -1358,14 +1536,14 @@
       this.vx = vx; this.vy = vy;
       this.color = color;
       this.alpha = 1;
-      this.size  = size || (Math.random() * 2.5 + 1);
-      this.decay = Math.random() * 0.012 + 0.008;
+      this.size  = size || (Math.random() * 2 + 0.9);
+      this.decay = Math.random() * 0.024 + 0.02;
       this.gravity = 0.06;
       this.trail = [];
     }
     update() {
       this.trail.push({ x: this.x, y: this.y, a: this.alpha });
-      if (this.trail.length > 6) this.trail.shift();
+      if (this.trail.length > 3) this.trail.shift();
       this.vy += this.gravity;
       this.vx *= 0.98;
       this.x  += this.vx;
@@ -1375,10 +1553,10 @@
     draw() {
       for (let i = 0; i < this.trail.length; i++) {
         const t = this.trail[i];
-        ctx.globalAlpha = t.a * (i / this.trail.length) * 0.4;
+        ctx.globalAlpha = t.a * (i / this.trail.length) * 0.2;
         ctx.fillStyle   = this.color;
         ctx.beginPath();
-        ctx.arc(t.x, t.y, this.size * 0.6, 0, Math.PI * 2);
+        ctx.arc(t.x, t.y, this.size * 0.45, 0, Math.PI * 2);
         ctx.fill();
       }
       ctx.globalAlpha = this.alpha;
@@ -1388,7 +1566,14 @@
       ctx.fill();
       ctx.globalAlpha = 1;
     }
-    isDead() { return this.alpha <= 0; }
+    isDead() {
+      return (
+        this.alpha <= 0 ||
+        this.y > hero.offsetHeight + 36 ||
+        this.x < -36 ||
+        this.x > hero.offsetWidth + 36
+      );
+    }
   }
 
   // ── Rocket ──
@@ -1426,19 +1611,6 @@
           Math.random() * 2.5 + 0.8
         ));
       }
-      // Sparkle ring
-      if (Math.random() < 0.5) {
-        for (let i = 0; i < 20; i++) {
-          const angle = (Math.PI * 2 * i) / 20;
-          const speed = 6 + Math.random() * 2;
-          particles.push(new Particle(
-            this.x, this.y, '#ffffff',
-            Math.cos(angle) * speed,
-            Math.sin(angle) * speed,
-            1
-          ));
-        }
-      }
     }
     draw() {
       for (let i = 0; i < this.trail.length; i++) {
@@ -1459,12 +1631,10 @@
 
   const particles = [];
   const rockets   = [];
-  let lastLaunch  = 0;
 
-  // Schedule: burst at 0.5s, 1.5s, 2.5s, then every 4-6s
+  // Intro bursts only, then user-triggered fireworks on tap.
   const schedule = [500, 1500, 2500];
   let schedIdx = 0;
-  let nextAuto = 8000;
 
   function launchBurst(n) {
     for (let i = 0; i < n; i++) {
@@ -1473,18 +1643,14 @@
   }
 
   function tick(ts) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Scheduled launches
     if (schedIdx < schedule.length && ts >= schedule[schedIdx]) {
       launchBurst(2 + schedIdx);
       schedIdx++;
-    }
-
-    // Auto repeating bursts
-    if (ts >= nextAuto) {
-      launchBurst(2 + Math.floor(Math.random() * 3));
-      nextAuto = ts + 4000 + Math.random() * 3000;
     }
 
     // Update & draw rockets
@@ -1508,7 +1674,7 @@
 
   // Click anywhere on hero to trigger a burst
   hero.addEventListener('click', function(e) {
-    if (e.target.closest('button, a, .hero-stat')) return;
+    if (e.target.closest('button, a')) return;
     const rect = hero.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const count = 80 + Math.floor(Math.random() * 40);
