@@ -145,6 +145,7 @@
       text-transform: uppercase;
       letter-spacing: 0.07em;
       text-align: center;
+      line-height: 1;
     }
 
     .hero-cta {
@@ -267,6 +268,7 @@
       flex-shrink: 0;
       display: flex;
       align-items: center;
+      line-height: 1;
       gap: 6px;
       padding: 8px 16px;
       border-radius: 50px;
@@ -1020,7 +1022,20 @@
     clubs:'nightclub', markets:'night_market', attractions:'park', areas:'taipei_street',
   };
 
+  const PLACE_URLS = {
+    'Xing Fu Tang':               'https://upload.wikimedia.org/wikipedia/commons/5/51/Xing_Fu_Tang_black_sesame_milk_tea.jpg',
+    'Ten Ren Tea':                'https://upload.wikimedia.org/wikipedia/commons/4/44/Gongguan_Store%2C_Ten_Ren%27s_Tea_20201212.jpg',
+    'WooTea':                     'https://upload.wikimedia.org/wikipedia/commons/3/32/Wootea_store_Kaifeng_Street_20230513_184202.jpg',
+    '50lan':                      'https://upload.wikimedia.org/wikipedia/commons/f/ff/50_Lan_Xindong_Store_%2853108156792%29.jpg',
+    'Din Tai Fung':               'https://www.dintaifung.com.tw/archive/images/food/xiaolongbao/BN013.png',
+    'RAW':                        'https://platform.eater.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/14665199/Ru.jpg',
+    'Addiction Aquatic Development': 'https://platform.eater.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/10766387/aquaticaddiction-2_26527525251_o.0.0.0.jpg',
+    'Yong Kang Beef Noodle':      'https://platform.eater.com/wp-content/uploads/sites/2/chorus/uploads/chorus_asset/file/10766443/yongkang-beefnoodlesoup_26320251560_o.0.0.0.jpg',
+    'Sappho Live Jazz':           'https://www.sappholive.com/wp-content/uploads/2025/05/284054372_10158688117602541_852208656473335411_n.jpg',
+  };
+
   function getImgUrl(place) {
+    if (PLACE_URLS[place.name]) return PLACE_URLS[place.name];
     const key = PLACE_IMGS[place.name] || CAT_IMG[place.cat];
     const id  = IMGS[key];
     return id ? `https://images.unsplash.com/${id}?auto=format&fit=crop&w=600&q=75` : '';
