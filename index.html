@@ -280,43 +280,35 @@
       color: var(--text);
     }
 
-    /* Mobile: hide from tab bar, show as floating pill */
     #theme-toggle-mobile {
       display: none;
     }
 
     @media (max-width: 560px) {
-      #theme-toggle { display: none; }
+      #tabs-inner {
+        gap: 4px;
+        padding-right: 10px;
+      }
 
-      #theme-toggle-mobile {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        position: fixed;
-        bottom: 20px;
-        right: 16px;
-        z-index: 200;
-        padding: 8px 14px;
-        border-radius: 50px;
-        border: 1.5px solid rgba(0,0,0,0.12);
-        background: var(--card-bg);
+      #tabs {
+        padding-left: 12px;
+      }
+
+      #theme-toggle {
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.12);
+        color: rgba(255,255,255,0.82);
+        border: 1px solid rgba(255,255,255,0.12);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+      }
+
+      body:not(.dark) #theme-toggle {
+        background: rgba(0,0,0,0.04);
         color: var(--text);
-        font-family: 'Inter', sans-serif;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1;
-        cursor: pointer;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        transition: background 0.2s, box-shadow 0.2s;
-      }
-
-      body.dark #theme-toggle-mobile {
-        border-color: rgba(255,255,255,0.12);
-        box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-      }
-
-      #theme-toggle-mobile:active {
-        transform: scale(0.95);
+        border-color: rgba(0,0,0,0.08);
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
       }
     }
 
