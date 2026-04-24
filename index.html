@@ -1585,12 +1585,12 @@
 
   // ── Rocket ──
   class Rocket {
-    constructor() {
-      this.x     = canvas.width * (0.15 + Math.random() * 0.7);
+    constructor(options = {}) {
+      this.x     = options.x ?? canvas.width * (0.15 + Math.random() * 0.7);
       this.y     = canvas.height;
-      this.targetY = canvas.height * (0.1 + Math.random() * 0.45);
+      this.targetY = options.targetY ?? canvas.height * (0.1 + Math.random() * 0.45);
       this.vy    = -10 - Math.random() * 5;
-      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+      this.color = options.color ?? COLORS[Math.floor(Math.random() * COLORS.length)];
       this.trail = [];
       this.exploded = false;
     }
@@ -1638,10 +1638,7 @@
 
   const particles = [];
   const rockets   = [];
-
-  // Intro bursts only, then user-triggered fireworks on tap.
-  const schedule = [500, 1500, 2500];
-  let schedIdx = 0;
+  let introStarted = false;
 
   function launchBurst(n) {
     for (let i = 0; i < n; i++) {
@@ -1649,15 +1646,43 @@
     }
   }
 
+  function launchDirectedBurst(config) {
+    const {
+      count = 2,
+      delay = 0,
+      spread = 0.08,
+      xRatio = 0.5,
+      heightMin = 0.16,
+      heightMax = 0.34,
+    } = config;
+
+    for (let i = 0; i < count; i++) {
+      setTimeout(() => {
+        const x = canvas.width * (xRatio + (Math.random() - 0.5) * spread);
+        const targetY = canvas.height * (heightMin + Math.random() * (heightMax - heightMin));
+        rockets.push(new Rocket({ x, targetY }));
+      }, delay + i * 180);
+    }
+  }
+
+  function startIntroShow() {
+    if (introStarted) return;
+    introStarted = true;
+
+    [
+      { delay: 260, count: 2, xRatio: 0.24, spread: 0.05, heightMin: 0.18, heightMax: 0.3 },
+      { delay: 620, count: 3, xRatio: 0.74, spread: 0.05, heightMin: 0.16, heightMax: 0.3 },
+      { delay: 1100, count: 4, xRatio: 0.5, spread: 0.12, heightMin: 0.12, heightMax: 0.24 },
+    ].forEach(launchDirectedBurst);
+  }
+
   function tick(ts) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    // Scheduled launches
-    if (schedIdx < schedule.length && ts >= schedule[schedIdx]) {
-      launchBurst(2 + schedIdx);
-      schedIdx++;
+    if (!introStarted && ts > 80) {
+      startIntroShow();
     }
 
     // Update & draw rockets
