@@ -1712,9 +1712,9 @@
     introStarted = true;
 
     [
-      { delay: 260, count: 2, xRatio: 0.24, spread: 0.05, heightMin: 0.18, heightMax: 0.3 },
-      { delay: 620, count: 3, xRatio: 0.74, spread: 0.05, heightMin: 0.16, heightMax: 0.3 },
-      { delay: 1100, count: 4, xRatio: 0.5, spread: 0.12, heightMin: 0.12, heightMax: 0.24 },
+      { delay: 0,   count: 2, xRatio: 0.24, spread: 0.05, heightMin: 0.18, heightMax: 0.3 },
+      { delay: 300, count: 3, xRatio: 0.74, spread: 0.05, heightMin: 0.16, heightMax: 0.3 },
+      { delay: 700, count: 4, xRatio: 0.5,  spread: 0.12, heightMin: 0.12, heightMax: 0.24 },
     ].forEach(launchDirectedBurst);
   }
 
@@ -1723,7 +1723,7 @@
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    if (!introStarted && ts > 80) {
+    if (!introStarted) {
       startIntroShow();
     }
 
