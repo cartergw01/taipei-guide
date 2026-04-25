@@ -540,8 +540,21 @@
       overflow: hidden;
       border: 1px solid rgba(0,0,0,0.05);
       transition: transform 0.25s, box-shadow 0.25s;
-      cursor: default;
+      cursor: pointer;
       animation: fadeSlideIn 0.4s ease-out both;
+      position: relative;
+    }
+
+    .card-link {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .card-name,
+    .read-more {
+      position: relative;
+      z-index: 2;
     }
 
     .card:hover {
@@ -1429,6 +1442,7 @@
     card.style.setProperty('--card-accent', CATEGORIES[place.cat].color);
     const imgUrl = getImgUrl(place);
     card.innerHTML = `
+      <a class="card-link" href="${getMapsUrl(place)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${place.name} in Google Maps"></a>
       <div class="card-top" aria-hidden="true"></div>
       <div class="card-img">${imgUrl ? `<img src="${imgUrl}" alt="Photo of ${place.name}" loading="lazy" decoding="async" onerror="this.remove()">` : ''}</div>
       <div class="card-body">
