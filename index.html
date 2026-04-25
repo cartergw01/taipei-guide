@@ -1476,6 +1476,7 @@
     const grid = document.getElementById('cards-grid');
     grid.innerHTML = '';
     places.forEach((p, i) => grid.appendChild(buildCard(p, i * 60)));
+    requestAnimationFrame(checkReadMore);
   }
 
   function renderFilter(tag) {
@@ -1504,7 +1505,20 @@
       grid.appendChild(hdr);
       groups[cat].forEach(p => grid.appendChild(buildCard(p, idx++ * 40)));
     });
+    requestAnimationFrame(checkReadMore);
   }
+
+  function checkReadMore() {
+    document.querySelectorAll('.card-desc').forEach(desc => {
+      const btn = desc.nextElementSibling;
+      if (!btn || !btn.classList.contains('read-more')) return;
+      // Only show toggle if text is actually clamped
+      const isClamped = desc.scrollHeight > desc.clientHeight + 2;
+      btn.style.display = isClamped ? '' : 'none';
+    });
+  }
+
+  window.addEventListener('resize', checkReadMore);
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
