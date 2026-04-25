@@ -1696,6 +1696,28 @@
   const rockets   = [];
   let introStarted = false;
 
+  function explodeAt(x, y) {
+    const count  = 90 + Math.floor(Math.random() * 50);
+    const color  = COLORS[Math.floor(Math.random() * COLORS.length)];
+    const color2 = COLORS[Math.floor(Math.random() * COLORS.length)];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+      const speed = 1.5 + Math.random() * 5;
+      particles.push(new Particle(
+        x, y,
+        Math.random() < 0.3 ? color2 : color,
+        Math.cos(angle) * speed,
+        Math.sin(angle) * speed,
+        Math.random() * 2.5 + 0.8
+      ));
+    }
+    // sparkle ring
+    for (let i = 0; i < 18; i++) {
+      const angle = (Math.PI * 2 * i) / 18;
+      particles.push(new Particle(x, y, '#ffffff', Math.cos(angle) * 7, Math.sin(angle) * 7, 1));
+    }
+  }
+
   function launchBurst(n) {
     for (let i = 0; i < n; i++) {
       setTimeout(() => rockets.push(new Rocket()), i * 220);
@@ -1725,10 +1747,21 @@
     if (introStarted) return;
     introStarted = true;
 
+    const W = hero.offsetWidth;
+    const H = hero.offsetHeight;
+
+    // Instant explosions — visible on frame 1
+    explodeAt(W * 0.22, H * 0.25);
+    explodeAt(W * 0.78, H * 0.20);
+    explodeAt(W * 0.50, H * 0.15);
+    setTimeout(() => { explodeAt(W * 0.35, H * 0.30); explodeAt(W * 0.65, H * 0.22); }, 120);
+    setTimeout(() => { explodeAt(W * 0.15, H * 0.18); explodeAt(W * 0.85, H * 0.28); }, 280);
+
+    // Follow-up rockets
     [
-      { delay: 0,   count: 2, xRatio: 0.24, spread: 0.05, heightMin: 0.18, heightMax: 0.3 },
-      { delay: 300, count: 3, xRatio: 0.74, spread: 0.05, heightMin: 0.16, heightMax: 0.3 },
-      { delay: 700, count: 4, xRatio: 0.5,  spread: 0.12, heightMin: 0.12, heightMax: 0.24 },
+      { delay: 400,  count: 2, xRatio: 0.24, spread: 0.05, heightMin: 0.18, heightMax: 0.3 },
+      { delay: 900,  count: 3, xRatio: 0.74, spread: 0.05, heightMin: 0.16, heightMax: 0.3 },
+      { delay: 1400, count: 4, xRatio: 0.5,  spread: 0.12, heightMin: 0.12, heightMax: 0.24 },
     ].forEach(launchDirectedBurst);
   }
 
