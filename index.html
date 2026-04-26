@@ -501,7 +501,8 @@
       #filter-tags       { gap: 6px; }
       .filter-btn        { font-size: 11px; padding: 5px 10px; }
       #filters-bar #theme-toggle { width: 32px; height: 32px; }
-      .sort-btn          { font-size: 10px; padding: 4px 9px; }
+      .sort-btn          { font-size: 10px; padding: 4px 8px; }
+      #sort-label        { display: none; }
       .section-header-top { gap: 8px; }
 
       /* Hide emoji — redundant with cover image, frees up width */
@@ -718,6 +719,22 @@
     #sort-control {
       display: inline-flex;
       align-items: center;
+      gap: 8px;
+    }
+
+    #sort-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      white-space: nowrap;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    #sort-buttons {
+      display: inline-flex;
+      align-items: center;
       border: 1.5px solid rgba(0,0,0,0.10);
       border-radius: 50px;
       overflow: hidden;
@@ -752,7 +769,7 @@
       color: #fff;
     }
 
-    body.dark #sort-control {
+    body.dark #sort-buttons {
       border-color: rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.05);
     }
@@ -974,10 +991,13 @@
     <div class="section-header">
       <div class="section-header-top">
         <div class="section-meta" id="section-meta">0 spots</div>
-        <div id="sort-control" role="group" aria-label="Sort order">
-          <button class="sort-btn active" data-sort="stars">⭐ Stars</button>
-          <button class="sort-btn" data-sort="alpha">A–Z</button>
-          <button class="sort-btn" data-sort="tags">Tags</button>
+        <div id="sort-control">
+          <span id="sort-label">Sort by</span>
+          <div id="sort-buttons" role="group" aria-label="Sort order">
+            <button class="sort-btn active" data-sort="stars">⭐ Stars</button>
+            <button class="sort-btn" data-sort="alpha">A–Z</button>
+            <button class="sort-btn" data-sort="recommended">✦ Recommended</button>
+          </div>
         </div>
       </div>
       <h2 class="section-title" id="section-title"></h2>
@@ -1482,19 +1502,19 @@
   let activeFilter   = null;
   let activeSort     = 'stars';
 
-  const TAG_PRIORITY = { must: 0, carter: 1, famous: 2, group: 3, touristy: 4 };
+  const TAG_WEIGHT = { must: 5, carter: 4, famous: 3, group: 2, touristy: 1 };
 
-  function tagScore(place) {
-    if (!place.tags || !place.tags.length) return 99;
-    return Math.min(...place.tags.map(t => TAG_PRIORITY[t] ?? 50));
+  function recommendScore(place) {
+    if (!place.tags || !place.tags.length) return 0;
+    return place.tags.reduce((sum, t) => sum + (TAG_WEIGHT[t] || 0), 0);
   }
 
   function sortPlaces(places) {
     const arr = [...places];
     if (activeSort === 'alpha') {
       arr.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (activeSort === 'tags') {
-      arr.sort((a, b) => tagScore(a) - tagScore(b) || a.name.localeCompare(b.name));
+    } else if (activeSort === 'recommended') {
+      arr.sort((a, b) => recommendScore(b) - recommendScore(a) || (b.rating || 0) - (a.rating || 0));
     } else {
       arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
     }
