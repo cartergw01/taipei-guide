@@ -501,8 +501,7 @@
       #filter-tags       { gap: 6px; }
       .filter-btn        { font-size: 11px; padding: 5px 10px; }
       #filters-bar #theme-toggle { width: 32px; height: 32px; }
-      .sort-btn          { font-size: 10px; padding: 4px 8px; }
-      #sort-label        { display: none; }
+      #sort-toggle       { font-size: 11px; padding: 4px 10px 4px 11px; }
       .section-header-top { gap: 8px; }
 
       /* Hide emoji — redundant with cover image, frees up width */
@@ -717,70 +716,115 @@
     }
 
     #sort-control {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      position: relative;
     }
 
-    #sort-label {
+    #sort-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
       font-family: 'Inter', sans-serif;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      color: var(--text-muted);
-      white-space: nowrap;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-    }
-
-    #sort-buttons {
-      display: inline-flex;
-      align-items: center;
-      border: 1.5px solid rgba(0,0,0,0.10);
+      padding: 5px 11px 5px 13px;
+      border: 1.5px solid rgba(0,0,0,0.12);
       border-radius: 50px;
-      overflow: hidden;
-      background: rgba(255,255,255,0.6);
-    }
-
-    .sort-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 5px 11px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
+      background: rgba(255,255,255,0.7);
+      color: var(--text);
       cursor: pointer;
       transition: all 0.18s;
       white-space: nowrap;
       line-height: 1;
     }
 
-    .sort-btn + .sort-btn {
-      border-left: 1px solid rgba(0,0,0,0.08);
+    #sort-toggle:hover {
+      border-color: rgba(0,0,0,0.28);
     }
 
-    .sort-btn:hover { color: var(--text); }
-
-    .sort-btn.active {
-      background: var(--text);
-      color: #fff;
+    #sort-toggle .sort-caret {
+      width: 10px;
+      height: 10px;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+      opacity: 0.55;
     }
 
-    body.dark #sort-buttons {
+    #sort-control.open #sort-toggle .sort-caret {
+      transform: rotate(180deg);
+    }
+
+    #sort-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      min-width: 160px;
+      background: var(--card-bg, #fff);
+      border: 1.5px solid rgba(0,0,0,0.10);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    #sort-control.open #sort-dropdown {
+      display: block;
+    }
+
+    .sort-option {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      width: 100%;
+      padding: 10px 14px;
+      border: none;
+      background: transparent;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.15s;
+    }
+
+    .sort-option:hover {
+      background: rgba(0,0,0,0.04);
+    }
+
+    .sort-option.active {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .sort-option .sort-check {
+      margin-left: auto;
+      opacity: 0;
+      font-size: 12px;
+    }
+
+    .sort-option.active .sort-check {
+      opacity: 1;
+    }
+
+    body.dark #sort-toggle {
+      border-color: rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.07);
+      color: var(--text);
+    }
+
+    body.dark #sort-toggle:hover {
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    body.dark #sort-dropdown {
+      background: #1a1a28;
       border-color: rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.05);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
     }
 
-    body.dark .sort-btn + .sort-btn {
-      border-left-color: rgba(255,255,255,0.08);
-    }
-
-    body.dark .sort-btn.active {
-      background: rgba(255,255,255,0.18);
-      color: #fff;
+    body.dark .sort-option:hover {
+      background: rgba(255,255,255,0.06);
     }
 
     .filter-group-header {
@@ -992,11 +1036,14 @@
       <div class="section-header-top">
         <div class="section-meta" id="section-meta">0 spots</div>
         <div id="sort-control">
-          <span id="sort-label">Sort by</span>
-          <div id="sort-buttons" role="group" aria-label="Sort order">
-            <button class="sort-btn active" data-sort="stars">⭐ Stars</button>
-            <button class="sort-btn" data-sort="alpha">A–Z</button>
-            <button class="sort-btn" data-sort="recommended">✦ Recommended</button>
+          <button id="sort-toggle" aria-haspopup="listbox" aria-expanded="false">
+            Sort by: <span id="sort-current">⭐ Stars</span>
+            <svg class="sort-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
+          </button>
+          <div id="sort-dropdown" role="listbox">
+            <button class="sort-option active" data-sort="stars">⭐ Stars <span class="sort-check">✓</span></button>
+            <button class="sort-option" data-sort="alpha">A–Z <span class="sort-check">✓</span></button>
+            <button class="sort-option" data-sort="recommended">✦ Recommended <span class="sort-check">✓</span></button>
           </div>
         </div>
       </div>
@@ -1521,12 +1568,33 @@
     return arr;
   }
 
+  const SORT_LABELS = { stars: '⭐ Stars', alpha: 'A–Z', recommended: '✦ Recommended' };
+
   function setActiveSort(sort) {
     activeSort = sort;
-    document.querySelectorAll('.sort-btn').forEach(b => {
+    document.getElementById('sort-current').textContent = SORT_LABELS[sort];
+    document.querySelectorAll('.sort-option').forEach(b => {
       b.classList.toggle('active', b.dataset.sort === sort);
     });
   }
+
+  const sortControl = document.getElementById('sort-control');
+  const sortToggle  = document.getElementById('sort-toggle');
+
+  sortToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = sortControl.classList.toggle('open');
+    sortToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', () => {
+    sortControl.classList.remove('open');
+    sortToggle.setAttribute('aria-expanded', 'false');
+  });
+
+  document.getElementById('sort-dropdown').addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
 
   function renderTags(tags) {
     if (!tags || tags.length === 0) return '';
@@ -1659,10 +1727,13 @@
     });
   });
 
-  document.querySelectorAll('.sort-btn').forEach(btn => {
+  document.querySelectorAll('.sort-option').forEach(btn => {
     btn.addEventListener('click', () => {
-      if (activeSort === btn.dataset.sort) return;
-      setActiveSort(btn.dataset.sort);
+      const sort = btn.dataset.sort;
+      sortControl.classList.remove('open');
+      sortToggle.setAttribute('aria-expanded', 'false');
+      if (activeSort === sort) return;
+      setActiveSort(sort);
       if (activeFilter) renderFilter(activeFilter);
       else render(activeCategory);
     });
