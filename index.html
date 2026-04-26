@@ -513,16 +513,15 @@
       .card-body         { padding: 8px 10px 10px; }
       .card-header       { gap: 0; margin-bottom: 5px; }
 
-      /* Name row: name on left, rating on right — both on their own lines */
+      /* Name row */
       .card-name-row     { align-items: flex-start; gap: 4px; }
-      .name-mrt          { flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; flex: 1; }
+      .name-mrt          { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px; min-width: 0; flex: 1; }
       .card-name         { font-size: 12px; line-height: 1.25; font-weight: 700; }
-      .mrt-badge         { font-size: 9px; padding: 2px 5px; }
+      .mrt-badge         { font-size: 9px; padding: 2px 5px; flex-shrink: 0; }
       .card-rating       { font-size: 10px; white-space: nowrap; flex-shrink: 0; padding-top: 1px; }
 
-      /* Tags */
-      .card-tags         { gap: 3px; margin: 4px 0 2px; }
-      .tag               { font-size: 9px; padding: 2px 5px; }
+      /* Hide filter tags on mobile — redundant with filter buttons */
+      .card-tags         { display: none; }
 
       .card-desc         { font-size: 11px; line-height: 1.45;
                            display: -webkit-box; -webkit-line-clamp: 3;
