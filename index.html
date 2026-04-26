@@ -1048,7 +1048,6 @@
         </div>
       </div>
       <h2 class="section-title" id="section-title"></h2>
-      <p class="section-desc" id="section-desc"></p>
     </div>
     <div id="cards-grid"></div>
   </div>
@@ -1652,7 +1651,6 @@
 
     const catData = CATEGORIES[cat];
     document.getElementById('section-title').textContent = catData.label;
-    document.getElementById('section-desc').textContent  = catData.desc;
     const places = sortPlaces(PLACES.filter(p => p.cat === cat));
     document.getElementById('section-meta').textContent = getCountLabel(places.length);
     document.querySelectorAll('.tab').forEach(t => {
@@ -1674,7 +1672,6 @@
 
     const tagDef = TAGS[tag];
     document.getElementById('section-title').textContent = tagDef.label;
-    document.getElementById('section-desc').textContent  = `Every spot tagged "${tagDef.label}" across all categories.`;
 
     const matching = PLACES.filter(p => p.tags.includes(tag));
     document.getElementById('section-meta').textContent = getCountLabel(matching.length);
