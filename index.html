@@ -501,8 +501,7 @@
       #filter-tags       { gap: 6px; }
       .filter-btn        { font-size: 11px; padding: 5px 10px; }
       #filters-bar #theme-toggle { width: 32px; height: 32px; }
-      #sort-toggle       { font-size: 11px; padding: 4px 10px 4px 11px; }
-      .section-header-top { gap: 8px; }
+      #sort-toggle       { font-size: 11px; padding: 4px 9px 4px 10px; }
 
       /* Hide emoji — redundant with cover image, frees up width */
       .card-emoji        { display: none; }
@@ -702,21 +701,9 @@
       scroll-margin-top: calc(var(--tab-h) + 24px);
     }
 
-    .section-header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-      flex-wrap: wrap;
-    }
-
-    .section-header-top .section-meta {
-      margin-bottom: 0;
-    }
-
     #sort-control {
       position: relative;
+      flex-shrink: 0;
     }
 
     #sort-toggle {
@@ -727,9 +714,9 @@
       font-size: 12px;
       font-weight: 600;
       padding: 5px 11px 5px 13px;
-      border: 1.5px solid rgba(0,0,0,0.12);
+      border: 1.5px solid rgba(0,0,0,0.14);
       border-radius: 50px;
-      background: rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.02);
       color: var(--text);
       cursor: pointer;
       transition: all 0.18s;
@@ -809,7 +796,7 @@
 
     body.dark #sort-toggle {
       border-color: rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.06);
       color: var(--text);
     }
 
@@ -1025,6 +1012,17 @@
       <button class="filter-btn" data-tag="touristy">Tourist Spots</button>
       <button class="filter-btn" data-tag="famous">Popular Places</button>
     </div>
+    <div id="sort-control">
+      <button id="sort-toggle" aria-haspopup="listbox" aria-expanded="false">
+        Sort: <span id="sort-current">⭐ Stars</span>
+        <svg class="sort-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
+      </button>
+      <div id="sort-dropdown" role="listbox">
+        <button class="sort-option active" data-sort="stars">⭐ Stars <span class="sort-check">✓</span></button>
+        <button class="sort-option" data-sort="alpha">A–Z <span class="sort-check">✓</span></button>
+        <button class="sort-option" data-sort="recommended">✦ Recommended <span class="sort-check">✓</span></button>
+      </div>
+    </div>
     <button id="theme-toggle" aria-label="Toggle dark mode">
       <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg class="icon-sun"  width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
@@ -1033,20 +1031,7 @@
 
   <div id="cards-section">
     <div class="section-header">
-      <div class="section-header-top">
-        <div class="section-meta" id="section-meta">0 spots</div>
-        <div id="sort-control">
-          <button id="sort-toggle" aria-haspopup="listbox" aria-expanded="false">
-            Sort by: <span id="sort-current">⭐ Stars</span>
-            <svg class="sort-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
-          </button>
-          <div id="sort-dropdown" role="listbox">
-            <button class="sort-option active" data-sort="stars">⭐ Stars <span class="sort-check">✓</span></button>
-            <button class="sort-option" data-sort="alpha">A–Z <span class="sort-check">✓</span></button>
-            <button class="sort-option" data-sort="recommended">✦ Recommended <span class="sort-check">✓</span></button>
-          </div>
-        </div>
-      </div>
+      <div class="section-meta" id="section-meta">0 spots</div>
       <h2 class="section-title" id="section-title"></h2>
     </div>
     <div id="cards-grid"></div>
@@ -1662,7 +1647,6 @@
     const grid = document.getElementById('cards-grid');
     grid.innerHTML = '';
     places.forEach((p, i) => grid.appendChild(buildCard(p, i * 60)));
-    requestAnimationFrame(checkReadMore);
   }
 
   function renderFilter(tag) {
@@ -1690,20 +1674,8 @@
       grid.appendChild(hdr);
       groups[cat].forEach(p => grid.appendChild(buildCard(p, idx++ * 40)));
     });
-    requestAnimationFrame(checkReadMore);
   }
 
-  function checkReadMore() {
-    document.querySelectorAll('.card-desc').forEach(desc => {
-      const btn = desc.nextElementSibling;
-      if (!btn || !btn.classList.contains('read-more')) return;
-      // Only show toggle if text is actually clamped
-      const isClamped = desc.scrollHeight > desc.clientHeight + 2;
-      btn.style.display = isClamped ? '' : 'none';
-    });
-  }
-
-  window.addEventListener('resize', checkReadMore);
 
   document.querySelectorAll('.tab').forEach(tab => {
     tab.addEventListener('click', () => {
