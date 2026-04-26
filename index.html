@@ -501,6 +501,8 @@
       #filter-tags       { gap: 6px; }
       .filter-btn        { font-size: 11px; padding: 5px 10px; }
       #filters-bar #theme-toggle { width: 32px; height: 32px; }
+      .sort-btn          { font-size: 10px; padding: 4px 9px; }
+      .section-header-top { gap: 8px; }
 
       /* Hide emoji — redundant with cover image, frees up width */
       .card-emoji        { display: none; }
@@ -698,6 +700,70 @@
     #cards-grid,
     #cards-section .section-header {
       scroll-margin-top: calc(var(--tab-h) + 24px);
+    }
+
+    .section-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .section-header-top .section-meta {
+      margin-bottom: 0;
+    }
+
+    #sort-control {
+      display: inline-flex;
+      align-items: center;
+      border: 1.5px solid rgba(0,0,0,0.10);
+      border-radius: 50px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.6);
+    }
+
+    .sort-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 5px 11px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .sort-btn + .sort-btn {
+      border-left: 1px solid rgba(0,0,0,0.08);
+    }
+
+    .sort-btn:hover { color: var(--text); }
+
+    .sort-btn.active {
+      background: var(--text);
+      color: #fff;
+    }
+
+    body.dark #sort-control {
+      border-color: rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.05);
+    }
+
+    body.dark .sort-btn + .sort-btn {
+      border-left-color: rgba(255,255,255,0.08);
+    }
+
+    body.dark .sort-btn.active {
+      background: rgba(255,255,255,0.18);
+      color: #fff;
     }
 
     .filter-group-header {
@@ -906,7 +972,14 @@
 
   <div id="cards-section">
     <div class="section-header">
-      <div class="section-meta" id="section-meta">0 spots</div>
+      <div class="section-header-top">
+        <div class="section-meta" id="section-meta">0 spots</div>
+        <div id="sort-control" role="group" aria-label="Sort order">
+          <button class="sort-btn active" data-sort="stars">⭐ Stars</button>
+          <button class="sort-btn" data-sort="alpha">A–Z</button>
+          <button class="sort-btn" data-sort="tags">Tags</button>
+        </div>
+      </div>
       <h2 class="section-title" id="section-title"></h2>
       <p class="section-desc" id="section-desc"></p>
     </div>
@@ -1407,6 +1480,33 @@
 
   let activeCategory = 'eats';
   let activeFilter   = null;
+  let activeSort     = 'stars';
+
+  const TAG_PRIORITY = { must: 0, carter: 1, famous: 2, group: 3, touristy: 4 };
+
+  function tagScore(place) {
+    if (!place.tags || !place.tags.length) return 99;
+    return Math.min(...place.tags.map(t => TAG_PRIORITY[t] ?? 50));
+  }
+
+  function sortPlaces(places) {
+    const arr = [...places];
+    if (activeSort === 'alpha') {
+      arr.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (activeSort === 'tags') {
+      arr.sort((a, b) => tagScore(a) - tagScore(b) || a.name.localeCompare(b.name));
+    } else {
+      arr.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    }
+    return arr;
+  }
+
+  function setActiveSort(sort) {
+    activeSort = sort;
+    document.querySelectorAll('.sort-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.sort === sort);
+    });
+  }
 
   function renderTags(tags) {
     if (!tags || tags.length === 0) return '';
@@ -1465,7 +1565,7 @@
     const catData = CATEGORIES[cat];
     document.getElementById('section-title').textContent = catData.label;
     document.getElementById('section-desc').textContent  = catData.desc;
-    const places = PLACES.filter(p => p.cat === cat).sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    const places = sortPlaces(PLACES.filter(p => p.cat === cat));
     document.getElementById('section-meta').textContent = getCountLabel(places.length);
     document.querySelectorAll('.tab').forEach(t => {
       const on = t.dataset.cat === cat;
@@ -1492,7 +1592,7 @@
     document.getElementById('section-meta').textContent = getCountLabel(matching.length);
     const groups = {};
     matching.forEach(p => { if (!groups[p.cat]) groups[p.cat] = []; groups[p.cat].push(p); });
-    Object.values(groups).forEach(g => g.sort((a, b) => (b.rating || 0) - (a.rating || 0)));
+    Object.values(groups).forEach(g => { const s = sortPlaces(g); g.length = 0; s.forEach(p => g.push(p)); });
 
     const grid = document.getElementById('cards-grid');
     grid.innerHTML = '';
@@ -1536,6 +1636,15 @@
         renderFilter(tag);
         document.getElementById('cards-section').scrollIntoView({ behavior: smoothBehavior(), block: 'nearest' });
       }
+    });
+  });
+
+  document.querySelectorAll('.sort-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (activeSort === btn.dataset.sort) return;
+      setActiveSort(btn.dataset.sort);
+      if (activeFilter) renderFilter(activeFilter);
+      else render(activeCategory);
     });
   });
 
