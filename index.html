@@ -497,12 +497,12 @@
     @media (max-width: 560px) {
       #cards-grid        { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       #cards-section     { padding: 18px 12px 48px; }
-      #filters-bar       { padding: 10px 0 0; gap: 0; overflow-x: auto; flex-wrap: nowrap;
+      #filters-bar       { padding: 10px 0 0; gap: 6px; overflow-x: auto; flex-wrap: nowrap;
                            scrollbar-width: none; -ms-overflow-style: none; }
       #filters-bar::-webkit-scrollbar { display: none; }
-      #filter-tags       { gap: 6px; flex-wrap: nowrap; padding: 0 12px; flex-shrink: 0; }
+      #filter-tags       { flex: none; flex-wrap: nowrap; padding: 0 0 0 12px; gap: 6px; }
       .filter-btn        { font-size: 11px; padding: 5px 11px; flex-shrink: 0; }
-      #sort-control      { flex-shrink: 0; padding-right: 6px; }
+      #sort-control      { flex-shrink: 0; }
       #sort-toggle       { font-size: 11px; padding: 4px 9px 4px 10px; }
       #filters-bar #theme-toggle { width: 32px; height: 32px; flex-shrink: 0; margin-right: 12px; }
 
