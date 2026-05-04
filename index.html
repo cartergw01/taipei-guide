@@ -34,6 +34,7 @@
   <meta name="twitter:image" content="https://taipei-guide-etaa.vercel.app/assets/share-preview.png" />
   <meta name="twitter:image:alt" content="Carter welcomes you to Taipei over a night skyline hero image." />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
       --color-eats: #FF6B6B;
@@ -497,14 +498,10 @@
     @media (max-width: 560px) {
       #cards-grid        { grid-template-columns: repeat(2, 1fr); gap: 10px; }
       #cards-section     { padding: 18px 12px 48px; }
-      #filters-bar       { padding: 10px 0 0; gap: 6px; overflow-x: auto; flex-wrap: nowrap;
-                           scrollbar-width: none; -ms-overflow-style: none; }
-      #filters-bar::-webkit-scrollbar { display: none; }
-      #filter-tags       { flex: none; flex-wrap: nowrap; padding: 0 0 0 12px; gap: 6px; }
-      .filter-btn        { font-size: 11px; padding: 5px 11px; flex-shrink: 0; }
-      #sort-control      { flex-shrink: 0; }
-      #sort-toggle       { font-size: 11px; padding: 4px 9px 4px 10px; }
-      #filters-bar #theme-toggle { width: 32px; height: 32px; flex-shrink: 0; margin-right: 12px; }
+      #filters-bar       { padding: 10px 16px 0; gap: 16px; }
+      #tags-toggle,
+      #sort-toggle       { font-size: 12px; }
+      #filters-bar #theme-toggle { width: 32px; height: 32px; }
 
       /* Hide emoji — redundant with cover image, frees up width */
       .card-emoji        { display: none; }
@@ -571,6 +568,13 @@
     .card:hover {
       transform: translateY(-4px);
       box-shadow: var(--shadow-hover);
+    }
+
+    .card.card-highlight {
+      box-shadow:
+        0 0 0 3px color-mix(in srgb, var(--card-accent, #20ac8f) 35%, transparent),
+        var(--shadow-hover);
+      transform: translateY(-2px);
     }
 
     .card-top {
@@ -651,20 +655,74 @@
       padding: 14px 24px 0;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 16px;
     }
 
-    #filter-tags {
-      display: flex;
-      flex: 1;
-      flex-wrap: wrap;
+    .bar-dropdown {
+      position: relative;
+    }
+
+    /* Plain text toggle — no pill */
+    #tags-toggle,
+    #sort-toggle {
+      display: inline-flex;
       align-items: center;
-      gap: 8px;
-      min-width: 0;
+      gap: 4px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      white-space: nowrap;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    #tags-toggle:hover, #sort-toggle:hover { color: var(--text); }
+    #tags-control.open #tags-toggle,
+    #sort-control.open #sort-toggle { color: var(--text); }
+
+    .bar-caret {
+      width: 10px;
+      height: 10px;
+      transition: transform 0.2s;
+      opacity: 0.6;
+    }
+
+    #tags-control.open .bar-caret,
+    #sort-control.open .bar-caret { transform: rotate(180deg); }
+
+    #tags-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 180px;
+      background: var(--card-bg, #fff);
+      border: 1.5px solid rgba(0,0,0,0.10);
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      padding: 6px;
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    #tags-control.open #tags-dropdown { display: flex; }
+
+    #tags-dropdown .filter-btn {
+      justify-content: flex-start;
+      border-radius: 8px;
+      width: 100%;
     }
 
     #filters-bar #theme-toggle {
       flex-shrink: 0;
+      margin-left: auto;
       border: 1.5px solid rgba(0,0,0,0.14);
       background: rgba(0,0,0,0.02);
     }
@@ -696,64 +754,228 @@
       color: #fff;
     }
 
-    #cards-section,
-    #guide,
-    #cards-grid,
-    #cards-section .section-header {
+    /* ── MAP ── */
+    #map-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 24px 0;
       scroll-margin-top: calc(var(--tab-h) + 24px);
     }
 
-    #sort-control {
-      position: relative;
-      flex-shrink: 0;
+    #map-canvas {
+      height: 460px;
+      border-radius: 22px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 20px 50px rgba(17, 24, 39, 0.12);
+      background:
+        linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(255, 179, 71, 0.12)),
+        #eef4f7;
     }
 
-    #sort-toggle {
+    .map-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .map-legend-item {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
-      font-family: 'Inter', sans-serif;
+      gap: 8px;
+      min-height: 34px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.08);
+      background: rgba(255,255,255,0.8);
+      color: var(--text-muted);
       font-size: 12px;
-      font-weight: 600;
-      padding: 5px 11px 5px 13px;
-      border: 1.5px solid rgba(0,0,0,0.14);
-      border-radius: 50px;
-      background: rgba(0,0,0,0.02);
+      font-weight: 700;
+      transition: transform 0.2s ease, opacity 0.2s ease, border-color 0.2s ease;
+    }
+
+    .map-legend-item.is-active {
       color: var(--text);
-      cursor: pointer;
-      transition: all 0.18s;
-      white-space: nowrap;
-      line-height: 1;
+      border-color: color-mix(in srgb, var(--legend-color, rgba(0,0,0,0.14)) 45%, rgba(0,0,0,0.12));
+      transform: translateY(-1px);
     }
 
-    #sort-toggle:hover {
-      border-color: rgba(0,0,0,0.28);
+    .map-legend-item.is-muted {
+      opacity: 0.45;
     }
 
-    #sort-toggle .sort-caret {
+    .map-legend-swatch {
       width: 10px;
       height: 10px;
-      transition: transform 0.2s;
+      border-radius: 999px;
+      background: var(--legend-color, var(--text-muted));
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--legend-color, #999) 22%, transparent);
       flex-shrink: 0;
-      opacity: 0.55;
     }
 
-    #sort-control.open #sort-toggle .sort-caret {
-      transform: rotate(180deg);
+    .leaflet-container {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+    }
+
+    .leaflet-control-zoom {
+      border: 1px solid rgba(0,0,0,0.08) !important;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.14) !important;
+      overflow: hidden;
+    }
+
+    .leaflet-control-zoom a {
+      width: 34px;
+      height: 34px;
+      line-height: 34px;
+      color: var(--text);
+      background: rgba(255,255,255,0.94);
+    }
+
+    .leaflet-control-attribution {
+      background: rgba(255,255,255,0.84) !important;
+      color: var(--text-muted) !important;
+      border-top-left-radius: 10px;
+    }
+
+    .leaflet-control-attribution a {
+      color: inherit;
+    }
+
+    .map-marker {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid rgba(255,255,255,0.95);
+      background: var(--marker-color, #ff6b6b);
+      box-shadow:
+        0 10px 20px rgba(15, 23, 42, 0.22),
+        0 0 0 7px color-mix(in srgb, var(--marker-color, #ff6b6b) 18%, transparent);
+    }
+
+    .map-marker::after {
+      content: '';
+      position: absolute;
+      inset: 50% auto auto 50%;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.92);
+      transform: translate(-50%, -50%);
+    }
+
+    .map-popup .leaflet-popup-content-wrapper {
+      border-radius: 18px;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+      padding: 0;
+    }
+
+    .map-popup .leaflet-popup-content {
+      margin: 0;
+      min-width: 230px;
+    }
+
+    .map-popup-card {
+      padding: 14px 14px 12px;
+    }
+
+    .map-popup-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .map-popup-name {
+      font-family: 'Poppins', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text);
+    }
+
+    .map-popup-category {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .map-popup-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .map-popup-link,
+    .map-popup-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,0.1);
+      background: rgba(0,0,0,0.03);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .map-popup-button {
+      border: none;
+      background: color-mix(in srgb, var(--popup-color, #ff6b6b) 18%, rgba(255,255,255,0.9));
+    }
+
+    @media (max-width: 560px) {
+      #map-section {
+        padding: 18px 12px 0;
+      }
+
+      #map-canvas {
+        height: 360px;
+        border-radius: 18px;
+      }
+
+      .map-legend {
+        gap: 8px;
+      }
+
+      .map-legend-item {
+        padding: 6px 10px;
+      }
+    }
+
+    #cards-section,
+    #guide,
+    #cards-grid,
+    #cards-section .section-header,
+    #map-section {
+      scroll-margin-top: calc(var(--tab-h) + 24px);
     }
 
     #sort-dropdown {
       display: none;
       position: absolute;
-      top: calc(100% + 6px);
+      top: calc(100% + 8px);
       right: 0;
-      min-width: 160px;
+      min-width: 170px;
       background: var(--card-bg, #fff);
       border: 1.5px solid rgba(0,0,0,0.10);
       border-radius: 14px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
       overflow: hidden;
-      z-index: 100;
+      z-index: 200;
     }
 
     #sort-control.open #sort-dropdown {
@@ -796,16 +1018,7 @@
       opacity: 1;
     }
 
-    body.dark #sort-toggle {
-      border-color: rgba(255,255,255,0.14);
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-    }
-
-    body.dark #sort-toggle:hover {
-      border-color: rgba(255,255,255,0.28);
-    }
-
+    body.dark #tags-dropdown,
     body.dark #sort-dropdown {
       background: #1a1a28;
       border-color: rgba(255,255,255,0.10);
@@ -814,6 +1027,39 @@
 
     body.dark .sort-option:hover {
       background: rgba(255,255,255,0.06);
+    }
+
+    body.dark .map-legend-item,
+    body.dark .leaflet-control-attribution,
+    body.dark .leaflet-control-zoom a {
+      background: rgba(18, 18, 31, 0.9) !important;
+      border-color: rgba(255,255,255,0.08);
+      color: var(--text-muted) !important;
+    }
+
+    body.dark .map-legend-item.is-active,
+    body.dark .map-popup-link,
+    body.dark .map-popup-button {
+      color: var(--text);
+    }
+
+    body.dark .map-popup .leaflet-popup-content-wrapper,
+    body.dark .map-popup .leaflet-popup-tip {
+      background: #17171f;
+      color: var(--text);
+    }
+
+    body.dark .map-popup-link {
+      border-color: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
+    }
+
+    body.dark #map-canvas {
+      border-color: rgba(255,255,255,0.08);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      background:
+        linear-gradient(135deg, rgba(52, 152, 219, 0.14), rgba(255, 179, 71, 0.12)),
+        #10151f;
     }
 
     .filter-group-header {
@@ -1008,16 +1254,22 @@
   </div>
 
   <div id="filters-bar">
-    <div id="filter-tags">
-      <button class="filter-btn" data-tag="carter">Carter's List</button>
-      <button class="filter-btn" data-tag="group">Your Spreadsheet</button>
-      <button class="filter-btn" data-tag="touristy">Tourist Spots</button>
-      <button class="filter-btn" data-tag="famous">Popular Places</button>
+    <div id="tags-control" class="bar-dropdown">
+      <button id="tags-toggle" aria-haspopup="listbox" aria-expanded="false">
+        Tags
+        <svg class="bar-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
+      </button>
+      <div id="tags-dropdown" role="listbox">
+        <button class="filter-btn" data-tag="carter">Carter's List</button>
+        <button class="filter-btn" data-tag="group">Your Spreadsheet</button>
+        <button class="filter-btn" data-tag="touristy">Tourist Spots</button>
+        <button class="filter-btn" data-tag="famous">Popular Places</button>
+      </div>
     </div>
-    <div id="sort-control">
+    <div id="sort-control" class="bar-dropdown">
       <button id="sort-toggle" aria-haspopup="listbox" aria-expanded="false">
         Sort: <span id="sort-current">⭐ Stars</span>
-        <svg class="sort-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
+        <svg class="bar-caret" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,3.5 5,6.5 8,3.5"/></svg>
       </button>
       <div id="sort-dropdown" role="listbox">
         <button class="sort-option active" data-sort="stars">⭐ Stars <span class="sort-check">✓</span></button>
@@ -1029,6 +1281,10 @@
       <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
       <svg class="icon-sun"  width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     </button>
+  </div>
+
+  <div id="map-section">
+    <div id="map-canvas" aria-label="Interactive map of guide locations"></div>
   </div>
 
   <div id="cards-section">
@@ -1050,6 +1306,7 @@
   <span id="theme-toggle-label">Dark mode</span>
 </button>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
   const CATEGORIES = {
     eats:        { label: '🍜 Eats',         color: '#FF6B6B', desc: 'The best food in Taipei — from famous restaurants to hidden local gems.' },
@@ -1211,6 +1468,7 @@
     { cat: 'attractions', rating: 4.5, emoji: '🏛️', name: 'National Taiwan Museum', hood: 'Zhongzheng', tags: ['group'], desc: "Taiwan's oldest museum, sitting beautifully inside 228 Peace Memorial Park. Natural history, indigenous culture, and colonial-era architecture. Free on certain days." },
     { cat: 'attractions', rating: 4.6, emoji: '🕊️', name: '228 Peace Memorial Park', mapsQuery: '二二八和平紀念公園 台北', hood: 'Zhongzheng', tags: ['group'], desc: "A quiet, tree-lined park commemorating the 1947 February 28 Incident — a pivotal moment in Taiwan's history. Peaceful and reflective, great for a first morning stroll." },
     { cat: 'attractions', rating: 4.4, emoji: '🦁', name: 'Taipei Zoo', mapsQuery: '台北市立動物園', hood: 'Wenshan', tags: ['group'], desc: 'One of the largest zoos in Asia — much bigger than expected. The giant pandas and Formosan animals are the highlights. A surprisingly full half-day.' },
+    { cat: 'attractions', rating: 4.6, emoji: '🚡', name: 'Maokong Gondola', mapsQuery: '貓空纜車 台北', hood: 'Wenshan', tags: ['famous','group'], desc: "A scenic gondola ride from Taipei Zoo up into the forested hills of Maokong — famous for tea plantations and open-air tea houses. Some cabins have glass floors. Best at sunset when the city lights up below." },
     { cat: 'attractions', rating: 4.6, emoji: '♨️', name: 'Spring City Resort', hood: 'Beitou', tags: ['group'], desc: 'The best onsen resort in Beitou hot spring district. Multiple pools at different temperatures, indoor and outdoor. The perfect recovery day after nights out.' },
 
     // AREAS
@@ -1531,6 +1789,82 @@
     return id ? `https://images.unsplash.com/${id}?auto=format&fit=crop&w=600&q=75` : '';
   }
 
+  const TAIPEI_VIEW = {
+    center: [25.0418, 121.5366],
+    zoom: 12,
+  };
+
+  const HOOD_COORDS = {
+    "Da'an": [25.0265, 121.5435],
+    Zhongshan: [25.0602, 121.5266],
+    Xinyi: [25.0334, 121.5650],
+    Ximending: [25.0426, 121.5078],
+    Zhongzheng: [25.0340, 121.5193],
+    Songshan: [25.0513, 121.5632],
+    Neihu: [25.0837, 121.5897],
+    Datong: [25.0623, 121.5135],
+    Wanhua: [25.0370, 121.4998],
+    Nangang: [25.0548, 121.6067],
+    Wenshan: [24.9985, 121.5821],
+    Shilin: [25.0884, 121.5255],
+    Beitou: [25.1373, 121.5071],
+    "New Taipei": [25.0569, 121.4734],
+    Yangmingshan: [25.1548, 121.5478],
+    Xindian: [24.9539, 121.5405],
+    Hsinchu: [24.7855, 121.0051],
+  };
+
+  const HOOD_SPREAD = {
+    "Da'an": { lat: 0.011, lng: 0.013 },
+    Zhongshan: { lat: 0.012, lng: 0.013 },
+    Xinyi: { lat: 0.010, lng: 0.012 },
+    Ximending: { lat: 0.006, lng: 0.007 },
+    Zhongzheng: { lat: 0.011, lng: 0.011 },
+    Songshan: { lat: 0.010, lng: 0.012 },
+    Neihu: { lat: 0.012, lng: 0.013 },
+    Datong: { lat: 0.008, lng: 0.009 },
+    Wanhua: { lat: 0.009, lng: 0.010 },
+    Nangang: { lat: 0.010, lng: 0.012 },
+    Wenshan: { lat: 0.010, lng: 0.011 },
+    Shilin: { lat: 0.011, lng: 0.013 },
+    Beitou: { lat: 0.010, lng: 0.011 },
+    "New Taipei": { lat: 0.009, lng: 0.010 },
+    Yangmingshan: { lat: 0.016, lng: 0.018 },
+    Xindian: { lat: 0.010, lng: 0.011 },
+    Hsinchu: { lat: 0.006, lng: 0.006 },
+  };
+
+  const EXACT_COORDS = {
+    'Din Tai Fung': [25.033493, 121.529208],
+    'Fu Hang Soy Milk': [25.044561, 121.523496],
+    'Yong Kang Beef Noodle': [25.029435, 121.529413],
+    'A-Zong Oyster Noodles': [25.042695, 121.508280],
+    'Ningxia Night Market': [25.055675, 121.515790],
+    'Raohe Night Market': [25.050961, 121.577110],
+    'Shilin Night Market': [25.088116, 121.524259],
+    'Nanjichang Night Market': [25.027702, 121.506742],
+    'Elephant Mountain': [25.027050, 121.570532],
+    'Chiang Kai-shek Memorial': [25.034538, 121.521762],
+    "Da'an Forest Park": [25.033116, 121.535497],
+    'Longshan Temple': [25.036798, 121.499905],
+    'National Palace Museum': [25.102355, 121.548492],
+    'TSMC Museum of Innovation': [24.781171, 121.014867],
+    'Taipei Fine Arts Museum': [25.072593, 121.524903],
+    'New Taipei Metropolitan Park': [25.056915, 121.473423],
+    'Taipei 101': [25.033968, 121.564468],
+    'Jianguo Weekend Flower Market': [25.037533, 121.534611],
+    'Dajia Riverside Park': [25.069958, 121.536839],
+    '228 Peace Memorial Park': [25.041969, 121.515344],
+    'National Taiwan Museum': [25.042050, 121.514942],
+    'Taipei Zoo': [24.998848, 121.581079],
+    'Sunshine Riverside Plaza': [24.954353, 121.540637],
+    'Spring City Resort': [25.137781, 121.507151],
+  };
+
+  const MAP_SKIPS = new Set(['50lan', 'Ten Ren Tea', 'WooTea']);
+  const MAP_CATEGORIES = ['eats', 'cafes', 'boba', 'bars', 'clubs', 'markets', 'attractions'];
+  const MAP_FIT_PADDING = [28, 28];
+
   let activeCategory = 'eats';
   let activeFilter   = null;
   let activeSort     = 'stars';
@@ -1566,21 +1900,120 @@
 
   const sortControl = document.getElementById('sort-control');
   const sortToggle  = document.getElementById('sort-toggle');
+  const tagsControl = document.getElementById('tags-control');
+  const tagsToggle  = document.getElementById('tags-toggle');
+  const mapLegend    = document.getElementById('map-legend');
+
+  let guideMap;
+  let guideMarkers;
+
+  function closeAll() {
+    sortControl.classList.remove('open');
+    sortToggle.setAttribute('aria-expanded', 'false');
+    tagsControl.classList.remove('open');
+    tagsToggle.setAttribute('aria-expanded', 'false');
+  }
 
   sortToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    const open = sortControl.classList.toggle('open');
-    sortToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    const opening = !sortControl.classList.contains('open');
+    closeAll();
+    if (opening) {
+      sortControl.classList.add('open');
+      sortToggle.setAttribute('aria-expanded', 'true');
+    }
   });
 
-  document.addEventListener('click', () => {
-    sortControl.classList.remove('open');
-    sortToggle.setAttribute('aria-expanded', 'false');
-  });
-
-  document.getElementById('sort-dropdown').addEventListener('click', (e) => {
+  tagsToggle.addEventListener('click', (e) => {
     e.stopPropagation();
+    const opening = !tagsControl.classList.contains('open');
+    closeAll();
+    if (opening) {
+      tagsControl.classList.add('open');
+      tagsToggle.setAttribute('aria-expanded', 'true');
+    }
   });
+
+  document.addEventListener('click', closeAll);
+  document.getElementById('sort-dropdown').addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('tags-dropdown').addEventListener('click', (e) => e.stopPropagation());
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[char]));
+  }
+
+  function hashString(value) {
+    let hash = 2166136261;
+    for (let i = 0; i < value.length; i++) {
+      hash ^= value.charCodeAt(i);
+      hash = Math.imul(hash, 16777619);
+    }
+    return hash >>> 0;
+  }
+
+  function getCardId(name) {
+    return 'card-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function getDerivedMapCoords(place) {
+    const exact = EXACT_COORDS[place.name];
+    if (exact) return exact;
+
+    const base = HOOD_COORDS[place.hood] || TAIPEI_VIEW.center;
+    const spread = HOOD_SPREAD[place.hood] || { lat: 0.009, lng: 0.011 };
+    const hash = hashString(`${place.cat}:${place.name}`);
+    const angle = ((hash % 360) * Math.PI) / 180;
+    const radius = 0.22 + (((hash >>> 8) % 65) / 100);
+    const lat = base[0] + Math.sin(angle) * spread.lat * radius;
+    const lng = base[1] + Math.cos(angle) * spread.lng * radius;
+    return [Number(lat.toFixed(6)), Number(lng.toFixed(6))];
+  }
+
+  function seedMapData() {
+    PLACES.forEach((place) => {
+      if (place.cat === 'areas' || place.hood === 'Multiple' || MAP_SKIPS.has(place.name)) {
+        place.mapMode = 'skip';
+        return;
+      }
+
+      const [lat, lng] = getDerivedMapCoords(place);
+      place.lat = lat;
+      place.lng = lng;
+      place.mapMode = 'pin';
+    });
+  }
+
+  function getBasePlaces() {
+    return activeFilter
+      ? PLACES.filter((place) => place.tags.includes(activeFilter))
+      : PLACES.filter((place) => place.cat === activeCategory);
+  }
+
+  function isMapPlace(place) {
+    return place.mapMode !== 'skip' && Number.isFinite(place.lat) && Number.isFinite(place.lng);
+  }
+
+  function getMapPlaces(places) {
+    return places.filter(isMapPlace);
+  }
+
+  function updateTabs(cat) {
+    document.querySelectorAll('.tab').forEach((tab) => {
+      const on = !activeFilter && tab.dataset.cat === cat;
+      tab.classList.toggle('active', on);
+      tab.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+
+  function scrollToResults() {
+    document.getElementById('map-section').scrollIntoView({ behavior: smoothBehavior(), block: 'start' });
+  }
 
   function renderTags(tags) {
     if (!tags || tags.length === 0) return '';
@@ -1593,6 +2026,9 @@
   function buildCard(place, delay) {
     const card = document.createElement('div');
     card.className = 'card';
+    card.id = getCardId(place.name);
+    card.dataset.place = place.name;
+    card.tabIndex = -1;
     card.style.animationDelay = `${delay}ms`;
     card.style.setProperty('--card-accent', CATEGORIES[place.cat].color);
     const imgUrl = getImgUrl(place);
@@ -1631,85 +2067,227 @@
     });
   }
 
+  function buildLegend(places) {
+    if (!mapLegend) return;
+    const present = new Set(places.map((place) => place.cat));
+    mapLegend.innerHTML = MAP_CATEGORIES.map((cat) => `
+      <span class="map-legend-item ${present.has(cat) ? 'is-active' : 'is-muted'}" style="--legend-color:${CATEGORIES[cat].color}">
+        <span class="map-legend-swatch"></span>
+        ${escapeHtml(CATEGORIES[cat].label)}
+      </span>
+    `).join('');
+  }
+
+  function buildPopup(place) {
+    const category = CATEGORIES[place.cat];
+    return `
+      <div class="map-popup-card" style="--popup-color:${category.color}">
+        <div class="map-popup-category">
+          <span class="map-legend-swatch" style="--legend-color:${category.color}"></span>
+          ${escapeHtml(category.label)}
+        </div>
+        <div class="map-popup-top">
+          <div>
+            <div class="map-popup-name">${escapeHtml(place.name)}</div>
+            ${getMrtBadge(place.hood)}
+          </div>
+          ${place.rating != null ? `<span class="card-rating">⭐ ${place.rating.toFixed(1)}</span>` : ''}
+        </div>
+        <div class="map-popup-actions">
+          <a class="map-popup-link" href="${getMapsUrl(place)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+          <button class="map-popup-button" type="button" data-place="${encodeURIComponent(place.name)}">Show card</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function createMarker(place) {
+    return L.marker([place.lat, place.lng], {
+      icon: L.divIcon({
+        className: '',
+        html: `<span class="map-marker" style="--marker-color:${CATEGORIES[place.cat].color}"></span>`,
+        iconSize: [18, 18],
+        iconAnchor: [9, 9],
+        popupAnchor: [0, -10],
+      }),
+    }).bindPopup(buildPopup(place), {
+      className: 'map-popup',
+      closeButton: false,
+      autoPanPaddingTopLeft: [24, 24],
+      autoPanPaddingBottomRight: [24, 24],
+    });
+  }
+
+  function fitMapToPlaces(places) {
+    if (!guideMap) return;
+    if (!places.length) {
+      guideMap.setView(TAIPEI_VIEW.center, TAIPEI_VIEW.zoom);
+      return;
+    }
+    if (places.length === 1) {
+      guideMap.setView([places[0].lat, places[0].lng], 14);
+      return;
+    }
+
+    const preferred = places.filter((place) => place.hood !== 'Hsinchu');
+    const fitPlaces = preferred.length >= 2 ? preferred : places;
+    const bounds = L.latLngBounds(fitPlaces.map((place) => [place.lat, place.lng]));
+    guideMap.fitBounds(bounds.pad(0.22), { padding: MAP_FIT_PADDING, maxZoom: 14 });
+  }
+
+  function updateMapMeta(totalPlaces, mapPlaces) {
+    const mapCanvas = document.getElementById('map-canvas');
+    const skipped = totalPlaces - mapPlaces.length;
+    const label = skipped > 0
+      ? `${mapPlaces.length} mapped places, ${skipped} card-only places`
+      : `${mapPlaces.length} mapped places`;
+    mapCanvas.setAttribute('aria-label', `Interactive map of guide locations: ${label}`);
+  }
+
+  function updateMap(places) {
+    const mapPlaces = getMapPlaces(places);
+    updateMapMeta(places.length, mapPlaces);
+    buildLegend(places);
+    guideMarkers.clearLayers();
+    mapPlaces.forEach((place) => guideMarkers.addLayer(createMarker(place)));
+    fitMapToPlaces(mapPlaces);
+  }
+
+  function renderCurrentView() {
+    const places = getBasePlaces();
+    const grid = document.getElementById('cards-grid');
+
+    if (activeFilter) {
+      const tagDef = TAGS[activeFilter];
+      document.getElementById('section-title').textContent = tagDef.label;
+      document.getElementById('section-meta').textContent = getCountLabel(places.length);
+
+      const groups = {};
+      places.forEach((place) => {
+        if (!groups[place.cat]) groups[place.cat] = [];
+        groups[place.cat].push(place);
+      });
+      Object.values(groups).forEach((group) => {
+        const sorted = sortPlaces(group);
+        group.length = 0;
+        sorted.forEach((place) => group.push(place));
+      });
+
+      grid.innerHTML = '';
+      let idx = 0;
+      const catOrder = ['eats', 'cafes', 'boba', 'bars', 'clubs', 'markets', 'attractions', 'areas'];
+      catOrder.filter((cat) => groups[cat]).forEach((cat) => {
+        const hdr = document.createElement('div');
+        hdr.className = 'filter-group-header';
+        hdr.textContent = CATEGORIES[cat].label;
+        grid.appendChild(hdr);
+        groups[cat].forEach((place) => grid.appendChild(buildCard(place, idx++ * 40)));
+      });
+    } else {
+      const catData = CATEGORIES[activeCategory];
+      const sortedPlaces = sortPlaces(places);
+      document.getElementById('section-title').textContent = catData.label;
+      document.getElementById('section-meta').textContent = getCountLabel(sortedPlaces.length);
+
+      grid.innerHTML = '';
+      sortedPlaces.forEach((place, i) => grid.appendChild(buildCard(place, i * 60)));
+    }
+
+    updateMap(places);
+  }
+
   function render(cat) {
     activeCategory = cat;
-    activeFilter   = null;
+    activeFilter = null;
     setFilterBtns(null);
-
-    const catData = CATEGORIES[cat];
-    document.getElementById('section-title').textContent = catData.label;
-    const places = sortPlaces(PLACES.filter(p => p.cat === cat));
-    document.getElementById('section-meta').textContent = getCountLabel(places.length);
-    document.querySelectorAll('.tab').forEach(t => {
-      const on = t.dataset.cat === cat;
-      t.classList.toggle('active', on);
-      t.setAttribute('aria-pressed', on ? 'true' : 'false');
-    });
-
-    const grid = document.getElementById('cards-grid');
-    grid.innerHTML = '';
-    places.forEach((p, i) => grid.appendChild(buildCard(p, i * 60)));
+    updateTabs(cat);
+    renderCurrentView();
   }
 
   function renderFilter(tag) {
     activeFilter = tag;
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    updateTabs(activeCategory);
     setFilterBtns(tag);
-
-    const tagDef = TAGS[tag];
-    document.getElementById('section-title').textContent = tagDef.label;
-
-    const matching = PLACES.filter(p => p.tags.includes(tag));
-    document.getElementById('section-meta').textContent = getCountLabel(matching.length);
-    const groups = {};
-    matching.forEach(p => { if (!groups[p.cat]) groups[p.cat] = []; groups[p.cat].push(p); });
-    Object.values(groups).forEach(g => { const s = sortPlaces(g); g.length = 0; s.forEach(p => g.push(p)); });
-
-    const grid = document.getElementById('cards-grid');
-    grid.innerHTML = '';
-    let idx = 0;
-    const catOrder = ['eats','cafes','boba','bars','clubs','markets','attractions','areas'];
-    catOrder.filter(c => groups[c]).forEach(cat => {
-      const hdr = document.createElement('div');
-      hdr.className = 'filter-group-header';
-      hdr.textContent = CATEGORIES[cat].label;
-      grid.appendChild(hdr);
-      groups[cat].forEach(p => grid.appendChild(buildCard(p, idx++ * 40)));
-    });
+    renderCurrentView();
   }
 
+  function focusPlaceCard(name) {
+    const card = document.getElementById(getCardId(name));
+    if (!card) return;
+    card.scrollIntoView({ behavior: smoothBehavior(), block: 'center' });
+    card.classList.add('card-highlight');
+    window.setTimeout(() => card.classList.remove('card-highlight'), 1400);
+    const focusTarget = card.querySelector('.card-name');
+    if (focusTarget) focusTarget.focus({ preventScroll: true });
+  }
 
-  document.querySelectorAll('.tab').forEach(tab => {
+  function initMap() {
+    seedMapData();
+
+    guideMap = L.map('map-canvas', {
+      zoomControl: false,
+      scrollWheelZoom: false,
+      attributionControl: true,
+    });
+
+    L.control.zoom({ position: 'bottomright' }).addTo(guideMap);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+      maxZoom: 19,
+    }).addTo(guideMap);
+
+    guideMarkers = L.layerGroup().addTo(guideMap);
+    guideMap.setView(TAIPEI_VIEW.center, TAIPEI_VIEW.zoom);
+
+    const mapCanvas = document.getElementById('map-canvas');
+    mapCanvas.addEventListener('mouseenter', () => guideMap.scrollWheelZoom.enable());
+    mapCanvas.addEventListener('mouseleave', () => guideMap.scrollWheelZoom.disable());
+    mapCanvas.addEventListener('focusin', () => guideMap.scrollWheelZoom.enable());
+    mapCanvas.addEventListener('focusout', () => guideMap.scrollWheelZoom.disable());
+
+    window.addEventListener('resize', () => guideMap.invalidateSize());
+  }
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.map-popup-button');
+    if (!btn) return;
+    focusPlaceCard(decodeURIComponent(btn.dataset.place || ''));
+    if (guideMap) guideMap.closePopup();
+  });
+
+  document.querySelectorAll('.tab').forEach((tab) => {
     tab.addEventListener('click', () => {
       render(tab.dataset.cat);
-      document.getElementById('cards-section').scrollIntoView({ behavior: smoothBehavior(), block: 'nearest' });
+      scrollToResults();
     });
   });
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
+  document.querySelectorAll('.filter-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
+      closeAll();
       const tag = btn.dataset.tag;
       if (activeFilter === tag) {
         render(activeCategory);
       } else {
         renderFilter(tag);
-        document.getElementById('cards-section').scrollIntoView({ behavior: smoothBehavior(), block: 'nearest' });
       }
+      scrollToResults();
     });
   });
 
-  document.querySelectorAll('.sort-option').forEach(btn => {
+  document.querySelectorAll('.sort-option').forEach((btn) => {
     btn.addEventListener('click', () => {
       const sort = btn.dataset.sort;
       sortControl.classList.remove('open');
       sortToggle.setAttribute('aria-expanded', 'false');
       if (activeSort === sort) return;
       setActiveSort(sort);
-      if (activeFilter) renderFilter(activeFilter);
-      else render(activeCategory);
+      renderCurrentView();
     });
   });
 
+  initMap();
   render('eats');
 
   // ── DARK MODE ──
@@ -1722,6 +2300,9 @@
     localStorage.setItem('theme', dark ? 'dark' : 'light');
     themeLabel.textContent = dark ? 'Light mode' : 'Dark mode';
     document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+    if (guideMap) {
+      window.requestAnimationFrame(() => guideMap.invalidateSize());
+    }
   }
 
   const saved = localStorage.getItem('theme');
